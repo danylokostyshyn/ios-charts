@@ -21,6 +21,7 @@
 @property (nonatomic, strong) IBOutlet UISlider *sliderY;
 @property (nonatomic, strong) IBOutlet UITextField *sliderTextX;
 @property (nonatomic, strong) IBOutlet UITextField *sliderTextY;
+@property (nonatomic, strong) NSTimer *refreshTimer;
 
 @end
 
@@ -60,19 +61,30 @@
     xAxis.drawGridLinesEnabled = NO;
     
     ChartYAxis *leftAxis = _chartView.leftAxis;
-    leftAxis.labelCount = 7;
-    leftAxis.drawGridLinesEnabled = NO;
-    leftAxis.drawAxisLineEnabled = NO;
-    leftAxis.startAtZeroEnabled = NO;
+    leftAxis.enabled = NO;
     
     ChartYAxis *rightAxis = _chartView.rightAxis;
-    rightAxis.enabled = NO;
-    
+    rightAxis.enabled = YES;
+    rightAxis.labelCount = 7;
+    rightAxis.drawGridLinesEnabled = NO;
+    rightAxis.drawAxisLineEnabled = NO;
+    rightAxis.startAtZeroEnabled = NO;
+
     _chartView.legend.enabled = NO;
     
     _sliderX.value = 39.0;
     _sliderY.value = 100.0;
     [self slidersValueChanged:nil];
+    
+    self.refreshTimer = [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(reloadData) userInfo:nil repeats:YES];
+}
+
+- (void)reloadData
+{
+    double value = (arc4random() % 5) + 90.0;
+    self.chartView.rightAxis.currentValue = value;
+    self.chartView.currentValue = value;
+    [self.chartView setNeedsDisplay];
 }
 
 - (void)didReceiveMemoryWarning
@@ -105,7 +117,7 @@
     }
         
     CandleChartDataSet *set1 = [[CandleChartDataSet alloc] initWithYVals:yVals1 label:@"Data Set"];
-    set1.axisDependency = AxisDependencyLeft;
+    set1.axisDependency = AxisDependencyRight;
     [set1 setColor:[UIColor colorWithWhite:80/255.f alpha:1.f]];
     
     set1.shadowColor = UIColor.darkGrayColor;

@@ -272,6 +272,45 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
             
             ChartUtils.drawText(context: context, text: text, point: pt, align: textAlign, attributes: [NSFontAttributeName: labelFont, NSForegroundColorAttributeName: labelTextColor])
         }
+        drawCurrentValueLabel(context: context, fixedPosition: fixedPosition, offset: offset, textAlign: textAlign)
+    }
+    
+    internal func drawCurrentValueLabel(context context: CGContext?, fixedPosition: CGFloat, offset: CGFloat, textAlign: NSTextAlignment)
+    {
+        let currentValue = _yAxis.currentValue
+        let labelFont = _yAxis.labelFont
+        let labelTextColor = _yAxis.currentValueTextColor
+        let labelBackgroundColor = _yAxis.currentValueBackgroundColor
+        
+        let valueToPixelMatrix = transformer.valueToPixelMatrix
+        
+        var pt = CGPoint()
+        
+        pt.x = 0
+        pt.y = CGFloat(currentValue)
+        pt = CGPointApplyAffineTransform(pt, valueToPixelMatrix)
+        
+        pt.x = fixedPosition
+        pt.y += offset
+        
+        let formatterString = _yAxis.format(currentValue)
+        
+        // Draw background rect
+        var rect = (formatterString as NSString).boundingRectWithSize(CGSizeZero, options: .UsesFontLeading,
+            attributes: [NSFontAttributeName: labelFont], context: nil)
+        rect.origin = pt
+        rect = CGRectInset(rect, -2.0, -2.0)
+        
+        let path = CGPathCreateWithRect(rect, nil)
+        CGContextAddPath(context, path)
+        CGContextSetFillColorWithColor(context, labelBackgroundColor.CGColor)
+        CGContextDrawPath(context, .Fill)
+        
+        ChartUtils.drawText(context: context, text: formatterString, point: pt, align: textAlign,
+            attributes: [
+                NSFontAttributeName: labelFont,
+                NSForegroundColorAttributeName: labelTextColor
+            ])
     }
     
     private var _gridLineBuffer = [CGPoint](count: 2, repeatedValue: CGPoint())

@@ -20,6 +20,9 @@ import UIKit
 /// Customizations that affect the value range of the axis need to be applied before setting data for the chart.
 public class ChartYAxis: ChartAxisBase
 {
+    public var currentValueTextColor = UIColor.whiteColor()
+    public var currentValueBackgroundColor = UIColor.blackColor()
+
     @objc
     public enum YAxisLabelPosition: Int
     {
@@ -37,6 +40,7 @@ public class ChartYAxis: ChartAxisBase
     
     public var entries = [Double]()
     public var entryCount: Int { return entries.count; }
+    public var currentValue: Double = 0.0
     
     /// the number of y-label entries the y-labels should have, default 6
     private var _labelCount = Int(6)
@@ -237,6 +241,11 @@ public class ChartYAxis: ChartAxisBase
         return (valueFormatter ?? _defaultValueFormatter).stringFromNumber(entries[index])!
     }
     
+    public func format(number: Double) -> String
+    {
+        return (valueFormatter ?? _defaultValueFormatter).stringFromNumber(number)!
+    }
+
     /// - returns: true if this axis needs horizontal offset, false if no offset is needed.
     public var needsOffset: Bool
     {

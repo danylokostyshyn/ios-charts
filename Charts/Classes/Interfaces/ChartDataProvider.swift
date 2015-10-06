@@ -24,4 +24,5 @@ public protocol ChartDataProvider
     var xValCount: Int { get }
     var centerOffsets: CGPoint { get }
     var data: ChartData? { get }
+    optional var currentValue: Double { get }
 }

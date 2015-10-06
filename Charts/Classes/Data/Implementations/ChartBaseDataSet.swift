@@ -242,6 +242,8 @@ public class ChartBaseDataSet: NSObject, IChartDataSet
         }
     }
     
+    public var currentValueLineColor = UIColor.blackColor()
+    
     /// Sets/get a single color for value text.
     /// Setting the color clears the colors array and adds a single color.
     /// Getting will return the first color in the array.

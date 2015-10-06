@@ -315,6 +315,40 @@ public class CandleStickChartRenderer: LineScatterCandleRadarChartRenderer
     
     public override func drawExtras(context context: CGContext)
     {
+        drawCurrentValueLine(context: context)
+    }
+    
+    public func drawCurrentValueLine(context context: CGContext?)
+    {
+        guard let candleData = dataProvider?.candleData else { return }
+        
+        var dataSets = candleData.dataSets
+        for (var i = 0; i < dataSets.count; i++)
+        {
+            let dataSet = dataSets[i]
+            
+            guard
+                let currentValue = dataProvider?.currentValue,
+                let transformer = dataProvider?.getTransformer(dataSet.axisDependency)
+                else { continue }
+
+            let lineColor = dataSet.currentValueLineColor
+            let xOffset: CGFloat = 5.0
+            
+            var point = CGPoint(x: 0, y: currentValue)
+            transformer.pointValueToPixel(&point)
+            let y = point.y
+            
+            CGContextSaveGState(context)
+            
+            CGContextSetLineWidth(context, 1.0)
+            CGContextSetStrokeColorWithColor(context, lineColor.CGColor)
+            CGContextMoveToPoint(context, CGRectGetMinX(viewPortHandler.contentRect), y)
+            CGContextAddLineToPoint(context, CGRectGetMaxX(viewPortHandler.contentRect) + xOffset, y)
+            CGContextStrokePath(context)
+            
+            CGContextRestoreGState(context)
+        }
     }
     
     private var _highlightPointBuffer = CGPoint()

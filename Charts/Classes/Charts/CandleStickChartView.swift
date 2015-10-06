@@ -17,6 +17,8 @@ import CoreGraphics
 /// Financial chart type that draws candle-sticks.
 public class CandleStickChartView: BarLineChartViewBase, CandleChartDataProvider
 {
+    public var currentValue: Double = 0.0
+
     internal override func initialize()
     {
         super.initialize()
@@ -38,5 +40,10 @@ public class CandleStickChartView: BarLineChartViewBase, CandleChartDataProvider
     public var candleData: CandleChartData?
     {
         return _data as? CandleChartData
+    }
+    
+    public func candleStickChartRendererCurrentValue(renderer: CandleStickChartRenderer) -> Double
+    {
+        return self.currentValue
     }
 }

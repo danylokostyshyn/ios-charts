@@ -333,8 +333,17 @@ public class CandleStickChartRenderer: LineScatterCandleRadarChartRenderer
                 else { continue }
 
             let lineColor = dataSet.currentValueLineColor
+
             let xOffset: CGFloat = 5.0
-            
+            var startPointX: CGFloat = 0.0
+            var endPointX: CGFloat = 0.0
+            switch dataSet.axisDependency {
+            case .Left:
+                startPointX = xOffset * -1
+            case .Right:
+                endPointX = xOffset
+            }
+
             var point = CGPoint(x: 0, y: currentValue)
             transformer.pointValueToPixel(&point)
             let y = point.y
@@ -343,8 +352,8 @@ public class CandleStickChartRenderer: LineScatterCandleRadarChartRenderer
             
             CGContextSetLineWidth(context, 1.0)
             CGContextSetStrokeColorWithColor(context, lineColor.CGColor)
-            CGContextMoveToPoint(context, CGRectGetMinX(viewPortHandler.contentRect), y)
-            CGContextAddLineToPoint(context, CGRectGetMaxX(viewPortHandler.contentRect) + xOffset, y)
+            CGContextMoveToPoint(context, CGRectGetMinX(viewPortHandler.contentRect) + startPointX, y)
+            CGContextAddLineToPoint(context, CGRectGetMaxX(viewPortHandler.contentRect) + endPointX, y)
             CGContextStrokePath(context)
             
             CGContextRestoreGState(context)

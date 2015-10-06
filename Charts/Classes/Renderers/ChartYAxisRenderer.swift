@@ -277,10 +277,12 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
     
     internal func drawCurrentValueLabel(context context: CGContext?, fixedPosition: CGFloat, offset: CGFloat, textAlign: NSTextAlignment)
     {
-        let currentValue = _yAxis.currentValue
-        let labelFont = _yAxis.labelFont
-        let labelTextColor = _yAxis.currentValueTextColor
-        let labelBackgroundColor = _yAxis.currentValueBackgroundColor
+        guard let yAxis = yAxis, let context = context else { return }
+        
+        let currentValue = yAxis.currentValue
+        let labelFont = yAxis.labelFont
+        let labelTextColor = yAxis.currentValueTextColor
+        let labelBackgroundColor = yAxis.currentValueBackgroundColor
         
         let valueToPixelMatrix = transformer.valueToPixelMatrix
         
@@ -293,18 +295,47 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
         pt.x = fixedPosition
         pt.y += offset
         
-        let formatterString = _yAxis.format(currentValue)
+        let formatterString = yAxis.format(currentValue)
         
         // Draw background rect
         var rect = (formatterString as NSString).boundingRectWithSize(CGSizeZero, options: .UsesFontLeading,
             attributes: [NSFontAttributeName: labelFont], context: nil)
         rect.origin = pt
+        if yAxis.axisDependency == .Left {
+            rect.origin.x -= CGRectGetWidth(rect)
+        }
         rect = CGRectInset(rect, -2.0, -2.0)
         
+        // Move text closer to arrow pointer
+        switch yAxis.axisDependency {
+        case .Left:
+            rect.origin.x -= 1.0
+        case .Right:
+            rect.origin.x += 1.0
+        }
+
         let path = CGPathCreateWithRect(rect, nil)
         CGContextAddPath(context, path)
+        CGContextSetStrokeColorWithColor(context, labelBackgroundColor.CGColor)
         CGContextSetFillColorWithColor(context, labelBackgroundColor.CGColor)
         CGContextDrawPath(context, .Fill)
+
+        // Arrow pointer
+        switch yAxis.axisDependency {
+        case .Left:
+            CGContextMoveToPoint(context, CGRectGetMaxX(rect), CGRectGetMaxY(rect))
+            CGContextAddLineToPoint(context, CGRectGetMaxX(rect) + 5.0, CGRectGetMidY(rect))
+            CGContextAddLineToPoint(context, CGRectGetMaxX(rect), CGRectGetMinY(rect))
+            CGContextAddLineToPoint(context, CGRectGetMaxX(rect), CGRectGetMaxY(rect))
+        case .Right:
+            CGContextMoveToPoint(context, CGRectGetMinX(rect), CGRectGetMaxY(rect))
+            CGContextAddLineToPoint(context, CGRectGetMinX(rect) - 5.0, CGRectGetMidY(rect))
+            CGContextAddLineToPoint(context, CGRectGetMinX(rect), CGRectGetMinY(rect))
+            CGContextAddLineToPoint(context, CGRectGetMinX(rect), CGRectGetMaxY(rect))
+        }
+
+        CGContextClosePath(context)
+        CGContextFillPath(context)
         
         ChartUtils.drawText(context: context, text: formatterString, point: pt, align: textAlign,
             attributes: [

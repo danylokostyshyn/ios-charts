@@ -24,6 +24,8 @@ public class ChartAxisBase: ChartComponentBase
     public var axisLineWidth = CGFloat(0.5)
     public var axisLineDashPhase = CGFloat(0.0)
     public var axisLineDashLengths: [CGFloat]!
+
+    public var evenBarsColor = UIColor.clearColor()
     
     public var gridColor = UIColor.grayColor().colorWithAlphaComponent(0.9)
     public var gridLineWidth = CGFloat(0.5)

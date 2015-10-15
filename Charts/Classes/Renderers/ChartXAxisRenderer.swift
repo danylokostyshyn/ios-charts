@@ -175,17 +175,21 @@ public class ChartXAxisRenderer: ChartAxisRendererBase
             position.y = 0.0
             position = CGPointApplyAffineTransform(position, valueToPixelMatrix)
             
-            if (viewPortHandler.isInBoundsX(position.x))
+            let labelns = label! as NSString
+            let width = labelns.boundingRectWithSize(labelMaxSize, options: .UsesLineFragmentOrigin, attributes: labelAttrs, context: nil).size.width
+            
+            if (viewPortHandler.isInBoundsX(position.x) &&
+                viewPortHandler.isInBoundsX(position.x-width/2))
             {
                 let labelns = label! as NSString
                 
                 if (xAxis.isAvoidFirstLastClippingEnabled)
                 {
+                    let width = labelns.boundingRectWithSize(labelMaxSize, options: .UsesLineFragmentOrigin, attributes: labelAttrs, context: nil).size.width
+                    
                     // avoid clipping of the last
                     if (i == xAxis.values.count - 1 && xAxis.values.count > 1)
-                    {
-                        let width = labelns.boundingRectWithSize(labelMaxSize, options: .UsesLineFragmentOrigin, attributes: labelAttrs, context: nil).size.width
-                        
+                    {                        
                         if (width > viewPortHandler.offsetRight * 2.0
                             && position.x + width > viewPortHandler.chartWidth)
                         {
@@ -225,6 +229,7 @@ public class ChartXAxisRenderer: ChartAxisRendererBase
         
         CGContextSaveGState(context)
 
+        CGContextSetFillColorWithColor(context, xAxis.evenBarsColor.CGColor)
         if (!xAxis.gridAntialiasEnabled)
         {
             CGContextSetShouldAntialias(context, false)
@@ -245,11 +250,26 @@ public class ChartXAxisRenderer: ChartAxisRendererBase
         
         var position = CGPoint(x: 0.0, y: 0.0)
         
+        var itter = 0
         for i in self.minX.stride(to: self.maxX, by: xAxis.axisLabelModulus)
         {
+            itter += 1
+
             position.x = CGFloat(i)
             position.y = 0.0
             position = CGPointApplyAffineTransform(position, valueToPixelMatrix)
+            
+            // Draw even bars
+            if (itter % 2 == 0) {
+                let x = CGFloat(i + xAxis.axisLabelModulus)
+                var nextPosition = CGPoint(x: x, y: 0.0)
+                nextPosition = CGPointApplyAffineTransform(nextPosition, valueToPixelMatrix)
+                
+                let width = nextPosition.x - position.x
+                let height = viewPortHandler.contentBottom - viewPortHandler.contentTop
+                let rect = CGRectMake(position.x, viewPortHandler.contentTop, width, height)
+                CGContextFillRect(context, rect)
+            }
             
             if (position.x >= viewPortHandler.offsetLeft
                 && position.x <= viewPortHandler.chartWidth)

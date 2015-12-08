@@ -100,7 +100,7 @@ public class CandleStickChartRenderer: LineScatterCandleRadarChartRenderer
                     _shadowPoints[2].y = CGFloat(low) * phaseY
                     _shadowPoints[3].y = CGFloat(close) * phaseY
                 }
-                else if (open < close)
+                else if (e.open <= e.close)
                 {
                     _shadowPoints[0].y = CGFloat(high) * phaseY
                     _shadowPoints[1].y = CGFloat(close) * phaseY

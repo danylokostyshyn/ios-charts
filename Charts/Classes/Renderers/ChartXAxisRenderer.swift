@@ -182,7 +182,7 @@ public class ChartXAxisRenderer: ChartAxisRendererBase
                 viewPortHandler.isInBoundsX(position.x-width/2))
             {
                 let labelns = label! as NSString
-                
+
                 if (xAxis.isAvoidFirstLastClippingEnabled)
                 {
                     let width = labelns.boundingRectWithSize(labelMaxSize, options: .UsesLineFragmentOrigin, attributes: labelAttrs, context: nil).size.width

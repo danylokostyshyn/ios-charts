@@ -73,6 +73,16 @@ public class CandleStickChartRenderer: LineScatterCandleRadarChartRenderer
             guard let e = dataSet.entryForIndex(j) as? CandleChartDataEntry else { continue }
             
             let xIndex = e.xIndex
+
+//             NSLog("j : %d; e.xIndex : %d; :_minX : %d; _maxX : %d", j, e.xIndex, _minX, _maxX);
+            
+            // @Romano #date 2015-01-13
+            // If no Entry at the specifed x-index is found, entryForXIndex method returns the Entry at the closest x-index.
+            // We don't want to draw if there is no Y value for the given x-index, so skip.
+            if (e.xIndex != j)
+            {
+                continue
+            }
             
             if (xIndex < minx || xIndex >= maxx)
             {

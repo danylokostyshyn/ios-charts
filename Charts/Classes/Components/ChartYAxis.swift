@@ -22,6 +22,7 @@ public class ChartYAxis: ChartAxisBase
 {
     public var currentValueTextColor = UIColor.whiteColor()
     public var currentValueBackgroundColor = UIColor.blackColor()
+    public var drawArrowPointerEnabled = false
 
     @objc
     public enum YAxisLabelPosition: Int

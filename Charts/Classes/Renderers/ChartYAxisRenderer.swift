@@ -304,14 +304,18 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
         if yAxis.axisDependency == .Left {
             rect.origin.x -= CGRectGetWidth(rect)
         }
-        rect = CGRectInset(rect, -2.0, -2.0)
+        rect = CGRectInset(rect, -5.0, -2.0)
         
-        // Move text closer to arrow pointer
-        switch yAxis.axisDependency {
-        case .Left:
-            rect.origin.x -= 1.0
-        case .Right:
-            rect.origin.x += 1.0
+        if yAxis.drawArrowPointerEnabled {
+            rect = CGRectInset(rect, 3.0, 0.0) // Fix, box with arrow is too big
+            
+            // Move text closer to arrow pointer
+            switch yAxis.axisDependency {
+            case .Left:
+                rect.origin.x -= 1.0
+            case .Right:
+                rect.origin.x += 1.0
+            }
         }
 
         let path = CGPathCreateWithRect(rect, nil)
@@ -320,22 +324,25 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
         CGContextSetFillColorWithColor(context, labelBackgroundColor.CGColor)
         CGContextDrawPath(context, .Fill)
 
-        // Arrow pointer
-        switch yAxis.axisDependency {
-        case .Left:
-            CGContextMoveToPoint(context, CGRectGetMaxX(rect), CGRectGetMaxY(rect))
-            CGContextAddLineToPoint(context, CGRectGetMaxX(rect) + 5.0, CGRectGetMidY(rect))
-            CGContextAddLineToPoint(context, CGRectGetMaxX(rect), CGRectGetMinY(rect))
-            CGContextAddLineToPoint(context, CGRectGetMaxX(rect), CGRectGetMaxY(rect))
-        case .Right:
-            CGContextMoveToPoint(context, CGRectGetMinX(rect), CGRectGetMaxY(rect))
-            CGContextAddLineToPoint(context, CGRectGetMinX(rect) - 5.0, CGRectGetMidY(rect))
-            CGContextAddLineToPoint(context, CGRectGetMinX(rect), CGRectGetMinY(rect))
-            CGContextAddLineToPoint(context, CGRectGetMinX(rect), CGRectGetMaxY(rect))
+        if yAxis.drawArrowPointerEnabled {
+            // Arrow pointer
+            switch yAxis.axisDependency {
+            case .Left:
+                CGContextMoveToPoint(context, CGRectGetMaxX(rect), CGRectGetMaxY(rect))
+                CGContextAddLineToPoint(context, CGRectGetMaxX(rect) + 5.0, CGRectGetMidY(rect))
+                CGContextAddLineToPoint(context, CGRectGetMaxX(rect), CGRectGetMinY(rect))
+                CGContextAddLineToPoint(context, CGRectGetMaxX(rect), CGRectGetMaxY(rect))
+            case .Right:
+                CGContextMoveToPoint(context, CGRectGetMinX(rect), CGRectGetMaxY(rect))
+                CGContextAddLineToPoint(context, CGRectGetMinX(rect) - 5.0, CGRectGetMidY(rect))
+                CGContextAddLineToPoint(context, CGRectGetMinX(rect), CGRectGetMinY(rect))
+                CGContextAddLineToPoint(context, CGRectGetMinX(rect), CGRectGetMaxY(rect))
+            }
+            
+            CGContextClosePath(context)
+            CGContextFillPath(context)
         }
 
-        CGContextClosePath(context)
-        CGContextFillPath(context)
         
         ChartUtils.drawText(context: context, text: formatterString, point: pt, align: textAlign,
             attributes: [

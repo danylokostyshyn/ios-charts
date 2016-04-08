@@ -44,6 +44,98 @@ public class LineChartRenderer: LineRadarChartRenderer
                 drawDataSet(context: context, dataSet: set as! ILineChartDataSet)
             }
         }
+
+        drawFill(context: context, lineData: lineData)
+    }
+    
+    public func drawFill(context context: CGContext, lineData: LineChartData)
+    {
+        guard let dataSets = lineData.dataSets as? [LineChartDataSet] else { return }
+        
+        let groupIndexes = dataSets.map({ return $0.areaRangeGroupIndex }).filter({ $0 > -1 })
+        let uniqueGroupIndexes = Set(groupIndexes)
+        
+        for groupIndex in uniqueGroupIndexes {
+            let groupedDataSets = dataSets.filter({ $0.areaRangeGroupIndex == groupIndex })
+            guard
+                let firstDataSet = groupedDataSets.first,
+                let lastDataSet = groupedDataSets.last
+                where firstDataSet !== lastDataSet,
+                let path = generatePathFromDataSets(firstDataSet, lastDataSet: lastDataSet)
+                else { continue }
+            
+            let dataSet = firstDataSet
+            drawFilledPath(context: context, path: path, fillColor: dataSet.fillColor, fillAlpha: dataSet.fillAlpha)
+        }
+    }
+    
+    func generatePathFromDataSets(firstDataSet: ILineChartDataSet, lastDataSet: ILineChartDataSet) -> CGPath? {
+        
+        var dataSet = firstDataSet
+        
+        guard let
+            dataProvider = dataProvider,
+            animator = animator,
+            entryFrom = dataSet.entryForXIndex(self.minX),
+            entryTo = dataSet.entryForXIndex(self.maxX)
+            else { return nil }
+        
+        let trans = dataProvider.getTransformer(dataSet.axisDependency)
+        let entryCount = dataSet.entryCount
+        
+        let diff = (entryFrom == entryTo) ? 1 : 0
+        let minx = max(dataSet.entryIndex(entry: entryFrom) - diff, 0)
+        let maxx = min(max(minx + 2, dataSet.entryIndex(entry: entryTo) + 1), entryCount)
+        
+        let fillMin = dataSet.fillFormatter?.getFillLinePosition(dataSet: dataSet, dataProvider: dataProvider) ?? 0.0
+        var matrix = trans.valueToPixelMatrix
+        
+        let from = minx
+        let to = maxx
+        
+        let phaseX = animator.phaseX ?? 1.0
+        let phaseY = animator.phaseY ?? 1.0
+        
+        let filled = CGPathCreateMutable()
+        var e: ChartDataEntry!
+
+        // Draw the first line
+        
+        dataSet = firstDataSet
+        e = dataSet.entryForIndex(from)
+        if e != nil {
+            CGPathMoveToPoint(filled, &matrix, CGFloat(e.xIndex), CGFloat(e.value) * phaseY)
+            CGPathAddLineToPoint(filled, &matrix, CGFloat(e.xIndex), CGFloat(e.value) * phaseY)
+        }
+        
+        for (var x = from + 1, count = Int(ceil(CGFloat(to - from) * phaseX + CGFloat(from))); x < count; x++) {
+            guard let e = dataSet.entryForIndex(x) else { continue }
+            CGPathAddLineToPoint(filled, &matrix, CGFloat(e.xIndex), CGFloat(e.value) * phaseY)
+        }
+
+        // Close the first line and draw the second one
+        
+        dataSet = lastDataSet
+        e = dataSet.entryForIndex(max(min(Int(ceil(CGFloat(to - from) * phaseX + CGFloat(from))) - 1, dataSet.entryCount - 1), 0))
+        if e != nil {
+            CGPathAddLineToPoint(filled, &matrix, CGFloat(e.xIndex), CGFloat(e.value) * phaseY)
+        }
+        
+        for (var x = Int(ceil(CGFloat(to - from) * phaseX + CGFloat(from))); x >= from; x--) {
+            guard let e = dataSet.entryForIndex(x) else { continue }
+            CGPathAddLineToPoint(filled, &matrix, CGFloat(e.xIndex), CGFloat(e.value) * phaseY)
+        }
+        
+        // Close the second line
+
+        dataSet = firstDataSet
+        e = dataSet.entryForIndex(from)
+        if e != nil {
+            CGPathAddLineToPoint(filled, &matrix, CGFloat(e.xIndex), CGFloat(e.value) * phaseY)
+        }
+        
+        let test = UIBezierPath(CGPath: filled)
+        return filled
     }
     
     public func drawDataSet(context context: CGContext, dataSet: ILineChartDataSet)

@@ -20,6 +20,7 @@ import UIKit
 /// Customizations that affect the value range of the axis need to be applied before setting data for the chart.
 public class ChartYAxis: ChartAxisBase
 {
+    public var drawCurrentValueLabel = false
     public var currentValueTextColor = UIColor.whiteColor()
     public var currentValueBackgroundColor = UIColor.blackColor()
     public var drawArrowPointerEnabled = false

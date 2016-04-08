@@ -38,6 +38,8 @@ public class ChartViewBase: UIView, ChartDataProvider, ChartAnimatorDelegate
 {
     // MARK: - Properties
     
+    public var currentValue: Double = 0.0
+
     /// the default value formatter
     internal var _defaultValueFormatter: NSNumberFormatter = ChartUtils.defaultValueFormatter()
     

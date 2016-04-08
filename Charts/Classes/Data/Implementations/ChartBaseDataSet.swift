@@ -242,6 +242,7 @@ public class ChartBaseDataSet: NSObject, IChartDataSet
         }
     }
     
+    public var drawCurrentValueLine = false
     public var currentValueLineColor = UIColor.blackColor()
     
     /// Sets/get a single color for value text.

@@ -272,7 +272,10 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
             
             ChartUtils.drawText(context: context, text: text, point: pt, align: textAlign, attributes: [NSFontAttributeName: labelFont, NSForegroundColorAttributeName: labelTextColor])
         }
-        drawCurrentValueLabel(context: context, fixedPosition: fixedPosition, offset: offset, textAlign: textAlign)
+        
+        if yAxis.drawCurrentValueLabel {
+            drawCurrentValueLabel(context: context, fixedPosition: fixedPosition, offset: offset, textAlign: textAlign)
+        }
     }
     
     internal func drawCurrentValueLabel(context context: CGContext?, fixedPosition: CGFloat, offset: CGFloat, textAlign: NSTextAlignment)

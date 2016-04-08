@@ -325,7 +325,13 @@ public class CandleStickChartRenderer: LineScatterCandleRadarChartRenderer
     
     public override func drawExtras(context context: CGContext)
     {
-        drawCurrentValueLine(context: context)
+        guard let dataProvider = dataProvider,
+            candleData = dataProvider.candleData,
+            dataSet = candleData.dataSets.first as? ChartBaseDataSet  else { return }
+        
+        if dataSet.drawCurrentValueLine {
+            drawCurrentValueLine(context: context)
+        }
     }
     
     public func drawCurrentValueLine(context context: CGContext?)

@@ -37,7 +37,8 @@ public protocol ChartViewDelegate
 public class ChartViewBase: UIView, ChartDataProvider, ChartAnimatorDelegate
 {
     // MARK: - Properties
-    
+    public var annotationView: UIView?
+        
     public var currentValue: Double = 0.0
 
     /// the default value formatter
@@ -294,6 +295,8 @@ public class ChartViewBase: UIView, ChartDataProvider, ChartAnimatorDelegate
         
         let frame = self.bounds
 
+        showAnnotationView(_indicesToHighlight.first)
+        
         if _data === nil
         {
             
@@ -471,6 +474,7 @@ public class ChartViewBase: UIView, ChartDataProvider, ChartAnimatorDelegate
         if (h == nil)
         {
             _indicesToHighlight.removeAll(keepCapacity: false)
+            hideAnnotationView()
         }
         else
         {
@@ -481,10 +485,12 @@ public class ChartViewBase: UIView, ChartDataProvider, ChartAnimatorDelegate
                 h = nil
                 entry = nil
                 _indicesToHighlight.removeAll(keepCapacity: false)
+                hideAnnotationView()
             }
             else
             {
                 _indicesToHighlight = [h!]
+                showAnnotationView(h)
             }
         }
         
@@ -968,5 +974,44 @@ public class ChartViewBase: UIView, ChartDataProvider, ChartAnimatorDelegate
         {
             super.touchesCancelled(touches, withEvent: event)
         }
+    }
+    
+    // MARK: -
+    
+    private func showAnnotationView(highlight: ChartHighlight?) {
+        guard let
+            view = annotationView,
+            h = highlight
+            else { hideAnnotationView(); return; }
+        
+        let xIndex = h.xIndex
+        
+        if (xIndex <= Int(_deltaX) && xIndex <= Int(_deltaX * _animator.phaseX))
+        {
+            let e = _data.getEntryForHighlight(h)
+            if (e === nil || e!.xIndex != h.xIndex)
+            {
+                hideAnnotationView()
+                return
+            }
+            
+            let pos = getMarkerPosition(entry: e!, highlight: h)
+            view.center = pos
+
+            let rect = CGRectInset(view.frame, CGRectGetWidth(view.bounds)/4, CGRectGetHeight(view.bounds)/4)
+            if (!CGRectContainsRect(_viewPortHandler.contentRect, rect))
+            {
+                hideAnnotationView()
+                return
+            }
+            
+            if view.superview == nil { addSubview(view) }
+        }
+    }
+    
+    private func hideAnnotationView() {
+        guard let view = annotationView else { return }
+        
+        view.removeFromSuperview()
     }
 }

@@ -297,6 +297,9 @@ open class ChartBaseDataSet: NSObject, ChartDataSetProtocol
         return _valueFormatter == nil
     }
     
+    
+    public var drawCurrentValueLine = false
+    
     /// Sets/get a single color for value text.
     /// Setting the color clears the colors array and adds a single color.
     /// Getting will return the first color in the array.

@@ -29,7 +29,7 @@ open class YAxis: AxisBase
     @objc public var drawArrowPointerEnabled = false
     
     ///XXX
-    public var currentValue: Double = 0.0
+     @objc public var currentValue: Double = 0.0
     
     @objc(YAxisLabelPosition)
     public enum LabelPosition: Int

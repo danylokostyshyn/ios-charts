@@ -298,7 +298,8 @@ open class ChartBaseDataSet: NSObject, ChartDataSetProtocol
     }
     
     
-    public var drawCurrentValueLine = false
+    @objc public var drawCurrentValueLine = false
+    @objc public var currentValueLineColor = UIColor.black
     
     /// Sets/get a single color for value text.
     /// Setting the color clears the colors array and adds a single color.

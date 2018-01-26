@@ -13,7 +13,7 @@ import Foundation
 import CoreGraphics
 
 @objc(ChartAxisRendererBase)
-open class AxisRendererBase: Renderer
+open class AxisRendererBase: NSObject, Renderer
 {
     /// base axis this axis renderer works with
     @objc open var axis: AxisBase?

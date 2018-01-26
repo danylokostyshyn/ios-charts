@@ -29,7 +29,7 @@ open class YAxis: AxisBase
     @objc public var drawArrowPointerEnabled = false
     
     ///XXX
-     @objc public var currentValue: Double = 0.0
+    @objc public var currentValue: Double = 0.0
     
     @objc(YAxisLabelPosition)
     public enum LabelPosition: Int
@@ -131,10 +131,10 @@ open class YAxis: AxisBase
         return requiredSize().height
     }
     
-//    public func format(number: Double) -> String
-//    {
-//        return (valueFormatter ?? _defaultValueFormatter).stringFromNumber(number)!
-//    }
+    public func format(number: Double) -> String
+    {
+        return valueFormatter?.stringForValue(number, axis: self)  ?? ""
+    }
     
     /// - returns: `true` if this axis needs horizontal offset, `false` ifno offset is needed.
     @objc open var needsOffset: Bool

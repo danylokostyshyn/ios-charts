@@ -44,8 +44,8 @@ open class ChartViewBase: NSUIView, ChartDataProvider, AnimatorDelegate
     
     
     /// The default IValueFormatter that has been determined by the chart considering the provided minimum and maximum values.
-    internal var _defaultValueFormatter: ValueFormatter? = DefaultValueFormatter(decimals: 0)
-    
+    internal lazy var defaultValueFormatter: ValueFormatter = DefaultValueFormatter(decimals: 0)
+
     /// The data for the chart
     @objc open var data: ChartData?
         {
@@ -60,9 +60,9 @@ open class ChartViewBase: NSUIView, ChartDataProvider, AnimatorDelegate
 
             for set in data.dataSets
             {
-                if set.needsFormatter || set.valueFormatter === _defaultValueFormatter
+                if set.valueFormatter === defaultValueFormatter
                 {
-                    set.valueFormatter = _defaultValueFormatter
+                    set.valueFormatter = defaultValueFormatter
                 }
             }
 
@@ -217,8 +217,7 @@ open class ChartViewBase: NSUIView, ChartDataProvider, AnimatorDelegate
     /// - returns: `true` if the chart is empty (meaning it's data object is either null or contains no entries).
     @objc open func isEmpty() -> Bool
     {
-        guard let data = data else { return true }
-        return data.entryCount <= 0
+        return data?.isEmpty ?? true
     }
     
     /// Lets the chart know its underlying data has changed and should perform all necessary recalculations.
@@ -258,13 +257,11 @@ open class ChartViewBase: NSUIView, ChartDataProvider, AnimatorDelegate
         }
         
     
-        if _defaultValueFormatter is DefaultValueFormatter
+        if let formatter = defaultValueFormatter as? DefaultValueFormatter
         {
             // setup the formatter with a new number of digits
             let digits = reference.decimalPlaces
-            
-            (_defaultValueFormatter as? DefaultValueFormatter)?.decimals
-             = digits
+            formatter.decimals = digits
         }
     }
     

@@ -183,14 +183,10 @@ open class YAxisRenderer: NSObject, AxisRenderer
              rect.insetBy(dx:  3.0, dy: 0.0)
         }
 
-        let path = CGPath.init(rect: rect, transform: nil)
-        context.addPath(path)
+        context.addRect(rect)
         context.setFillColor(labelBackgroundColor.cgColor)
-        context.drawPath(using: .fill)
-
-        context.closePath()
         context.fillPath()
-
+        
         if axis.drawArrowPointerEnabled {
             switch axis.axisDependency {
             case .left:

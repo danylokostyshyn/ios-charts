@@ -28,7 +28,6 @@ open class YAxis: AxisBase
     @objc public var currentValueBackgroundColor = UIColor.black
     @objc public var drawArrowPointerEnabled = false
     
-    ///XXX
     @objc public var currentValue: Double = 0.0
     
     @objc(YAxisLabelPosition)

@@ -23,15 +23,76 @@ open class HorizontalBarChartView: BarChartView
     {
         super.initialize()
         
-        _leftAxisTransformer = TransformerHorizontalBarChart(viewPortHandler: viewPortHandler)
-        _rightAxisTransformer = TransformerHorizontalBarChart(viewPortHandler: viewPortHandler)
-
-        renderer = HorizontalBarChartRenderer(dataProvider: self, animator: chartAnimator, viewPortHandler: viewPortHandler)
-        leftYAxisRenderer = YAxisRendererHorizontalBarChart(viewPortHandler: viewPortHandler, axis: leftAxis, transformer: _leftAxisTransformer)
-        rightYAxisRenderer = YAxisRendererHorizontalBarChart(viewPortHandler: viewPortHandler, axis: rightAxis, transformer: _rightAxisTransformer)
-        xAxisRenderer = XAxisRendererHorizontalBarChart(viewPortHandler: viewPortHandler, axis: xAxis, transformer: _leftAxisTransformer, chart: self)
-
+        _leftAxisTransformer = TransformerHorizontalBarChart(viewPortHandler: _viewPortHandler)
+        _rightAxisTransformer = TransformerHorizontalBarChart(viewPortHandler: _viewPortHandler)
+        
+        renderer = HorizontalBarChartRenderer(dataProvider: self, animator: _animator, viewPortHandler: _viewPortHandler)
+        leftYAxisRenderer = YAxisRendererHorizontalBarChart(viewPortHandler: _viewPortHandler, yAxis: leftAxis, transformer: _leftAxisTransformer)
+        rightYAxisRenderer = YAxisRendererHorizontalBarChart(viewPortHandler: _viewPortHandler, yAxis: rightAxis, transformer: _rightAxisTransformer)
+        xAxisRenderer = XAxisRendererHorizontalBarChart(viewPortHandler: _viewPortHandler, xAxis: _xAxis, transformer: _leftAxisTransformer, chart: self)
+        
         self.highlighter = HorizontalBarHighlighter(chart: self)
+    }
+    
+    internal override func calculateLegendOffsets(offsetLeft: inout CGFloat, offsetTop: inout CGFloat, offsetRight: inout CGFloat, offsetBottom: inout CGFloat)
+    {
+        guard
+            let legend = _legend,
+            legend.isEnabled,
+            legend.drawInside
+        else { return }
+        
+        // setup offsets for legend
+        switch legend.orientation
+        {
+        case .vertical:
+            switch legend.horizontalAlignment
+            {
+            case .left:
+                offsetLeft += min(legend.neededWidth, _viewPortHandler.chartWidth * legend.maxSizePercent) + legend.xOffset
+                
+            case .right:
+                offsetRight += min(legend.neededWidth, _viewPortHandler.chartWidth * legend.maxSizePercent) + legend.xOffset
+                
+            case .center:
+                
+                switch legend.verticalAlignment
+                {
+                case .top:
+                    offsetTop += min(legend.neededHeight, _viewPortHandler.chartHeight * legend.maxSizePercent) + legend.yOffset
+                    
+                case .bottom:
+                    offsetBottom += min(legend.neededHeight, _viewPortHandler.chartHeight * legend.maxSizePercent) + legend.yOffset
+                    
+                default:
+                    break
+                }
+            }
+            
+        case .horizontal:
+            switch legend.verticalAlignment
+            {
+            case .top:
+                offsetTop += min(legend.neededHeight, _viewPortHandler.chartHeight * legend.maxSizePercent) + legend.yOffset
+                
+                // left axis equals the top x-axis in a horizontal chart
+                if leftAxis.isEnabled && leftAxis.isDrawLabelsEnabled
+                {
+                    offsetTop += leftAxis.getRequiredHeightSpace()
+                }
+                
+            case .bottom:
+                offsetBottom += min(legend.neededHeight, _viewPortHandler.chartHeight * legend.maxSizePercent) + legend.yOffset
+
+                // right axis equals the bottom x-axis in a horizontal chart
+                if rightAxis.isEnabled && rightAxis.isDrawLabelsEnabled
+                {
+                    offsetBottom += rightAxis.getRequiredHeightSpace()
+                }
+            default:
+                break
+            }
+        }
     }
     
     internal override func calculateOffsets()
@@ -81,8 +142,8 @@ open class HorizontalBarChartView: BarChartView
         offsetRight += self.extraRightOffset
         offsetBottom += self.extraBottomOffset
         offsetLeft += self.extraLeftOffset
-        
-        viewPortHandler.restrainViewPort(
+
+        _viewPortHandler.restrainViewPort(
             offsetLeft: max(self.minOffset, offsetLeft),
             offsetTop: max(self.minOffset, offsetTop),
             offsetRight: max(self.minOffset, offsetRight),
@@ -94,8 +155,8 @@ open class HorizontalBarChartView: BarChartView
     
     internal override func prepareValuePxMatrix()
     {
-        _rightAxisTransformer.prepareMatrixValuePx(chartXMin: rightAxis._axisMinimum, deltaX: CGFloat(rightAxis.axisRange), deltaY: CGFloat(xAxis.axisRange), chartYMin: xAxis._axisMinimum)
-        _leftAxisTransformer.prepareMatrixValuePx(chartXMin: leftAxis._axisMinimum, deltaX: CGFloat(leftAxis.axisRange), deltaY: CGFloat(xAxis.axisRange), chartYMin: xAxis._axisMinimum)
+        _rightAxisTransformer.prepareMatrixValuePx(chartXMin: rightAxis._axisMinimum, deltaX: CGFloat(rightAxis.axisRange), deltaY: CGFloat(_xAxis.axisRange), chartYMin: _xAxis._axisMinimum)
+        _leftAxisTransformer.prepareMatrixValuePx(chartXMin: leftAxis._axisMinimum, deltaX: CGFloat(leftAxis.axisRange), deltaY: CGFloat(_xAxis.axisRange), chartYMin: _xAxis._axisMinimum)
     }
     
     open override func getMarkerPosition(highlight: Highlight) -> CGPoint

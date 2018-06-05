@@ -12,6 +12,18 @@
 import Foundation
 import CoreGraphics
 
+extension Comparable {
+    func clamped(to range: ClosedRange<Self>) -> Self {
+        if self > range.upperBound {
+            return range.upperBound
+        } else if self < range.lowerBound {
+            return range.lowerBound
+        } else {
+            return self
+        }
+    }
+}
+
 extension FloatingPoint
 {
     var DEG2RAD: Self
@@ -53,7 +65,7 @@ extension CGSize
 extension Double
 {
     /// Rounds the number to the nearest multiple of it's order of magnitude, rounding away from zero if halfway.
-    func roundedToNextSignificant() -> Double
+    func roundedToNextSignficant() -> Double
     {
         guard
             !isInfinite,
@@ -76,7 +88,7 @@ extension Double
             self != 0.0
             else { return 0 }
 
-        let i = roundedToNextSignificant()
+        let i = self.roundedToNextSignficant()
 
         guard
             !i.isInfinite,
@@ -97,9 +109,16 @@ extension CGPoint
     }
 }
 
-extension CGContext {
-
-    open func drawImage(_ image: NSUIImage, atCenter center: CGPoint, size: CGSize)
+open class ChartUtils
+{
+    private static var _defaultValueFormatter: IValueFormatter = ChartUtils.generateDefaultValueFormatter()
+    
+    open class func drawImage(
+        context: CGContext,
+        image: NSUIImage,
+        x: CGFloat,
+        y: CGFloat,
+        size: CGSize)
     {
         var drawOffset = CGPoint()
         drawOffset.x = center.x - (size.width / 2)

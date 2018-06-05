@@ -17,19 +17,16 @@ import CoreGraphics
 #endif
 
 @objc(ChartLegendRenderer)
-open class LegendRenderer: NSObject, Renderer
+open class LegendRenderer: Renderer
 {
-    @objc public let viewPortHandler: ViewPortHandler
-
     /// the legend object this renderer renders
     @objc open var legend: Legend?
 
     @objc public init(viewPortHandler: ViewPortHandler, legend: Legend?)
     {
-        self.viewPortHandler = viewPortHandler
+        super.init(viewPortHandler: viewPortHandler)
+        
         self.legend = legend
-
-        super.init()
     }
 
     /// Prepares the legend and calculates all needed forms, labels and colors.
@@ -50,10 +47,10 @@ open class LegendRenderer: NSObject, Renderer
                 let entryCount = dataSet.entryCount
                 
                 // if we have a barchart with stacked bars
-                if dataSet is BarChartDataSetProtocol &&
-                    (dataSet as! BarChartDataSetProtocol).isStacked
+                if dataSet is IBarChartDataSet &&
+                    (dataSet as! IBarChartDataSet).isStacked
                 {
-                    let bds = dataSet as! BarChartDataSetProtocol
+                    let bds = dataSet as! IBarChartDataSet
                     var sLabels = bds.stackLabels
                     
                     for j in 0..<min(clrs.count, bds.stackSize)
@@ -88,9 +85,9 @@ open class LegendRenderer: NSObject, Renderer
                         )
                     }
                 }
-                else if dataSet is PieChartDataSetProtocol
+                else if dataSet is IPieChartDataSet
                 {
-                    let pds = dataSet as! PieChartDataSetProtocol
+                    let pds = dataSet as! IPieChartDataSet
                     
                     for j in 0..<min(clrs.count, entryCount)
                     {
@@ -124,10 +121,10 @@ open class LegendRenderer: NSObject, Renderer
                         )
                     }
                 }
-                else if dataSet is CandleChartDataSetProtocol &&
-                    (dataSet as! CandleChartDataSetProtocol).decreasingColor != nil
+                else if dataSet is ICandleChartDataSet &&
+                    (dataSet as! ICandleChartDataSet).decreasingColor != nil
                 {
-                    let candleDataSet = dataSet as! CandleChartDataSetProtocol
+                    let candleDataSet = dataSet as! ICandleChartDataSet
                     
                     entries.append(
                         LegendEntry(
@@ -465,7 +462,7 @@ open class LegendRenderer: NSObject, Renderer
                     
                     if direction == .rightToLeft
                     {
-                        posX -= (e.label as NSString!).size(withAttributes: [.font: labelFont]).width
+                        posX -= (e.label! as NSString).size(withAttributes: [.font: labelFont]).width
                     }
                     
                     if !wasStacked
@@ -568,6 +565,6 @@ open class LegendRenderer: NSObject, Renderer
     /// Draws the provided label at the given position.
     @objc open func drawLabel(context: CGContext, x: CGFloat, y: CGFloat, label: String, font: NSUIFont, textColor: NSUIColor)
     {
-        context.drawText(label, at: CGPoint(x: x, y: y), align: .left, attributes: [.font: font, .foregroundColor: textColor])
+        ChartUtils.drawText(context: context, text: label, point: CGPoint(x: x, y: y), align: .left, attributes: [NSAttributedStringKey.font: font, NSAttributedStringKey.foregroundColor: textColor])
     }
 }

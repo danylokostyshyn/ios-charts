@@ -18,21 +18,30 @@ open class PieChartData: ChartData
         super.init()
     }
     
-    public override init(dataSets: [ChartDataSetProtocol]?)
+    public override init(dataSets: [IChartDataSet]?)
     {
         super.init(dataSets: dataSets)
     }
-
-    public required init(arrayLiteral elements: ChartDataSetProtocol...)
-    {
-        super.init(dataSets: elements)
+    
+    /// - returns: All DataSet objects this ChartData object holds.
+    @objc open override var dataSets: [IChartDataSet]
+        {
+        get
+        {
+            assert(super.dataSets.count <= 1, "Found multiple data sets while pie chart only allows one")
+            return super.dataSets
+        }
+        set
+        {
+            super.dataSets = newValue
+        }
     }
-
-    @objc var dataSet: PieChartDataSetProtocol?
+    
+    @objc var dataSet: IPieChartDataSet?
     {
         get
         {
-            return dataSets.count > 0 ? dataSets[0] as? PieChartDataSetProtocol : nil
+            return dataSets.count > 0 ? dataSets[0] as? IPieChartDataSet : nil
         }
         set
         {

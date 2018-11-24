@@ -7,7 +7,7 @@
 
 import Foundation
 
-open class AreaChartDataSet: ScatterChartDataSet
+open class AreaChartDataSet: LineScatterCandleRadarChartDataSet, AreaChartDataSetProtocol
 {
-    
+    public var areafillColor: NSUIColor?   
 }

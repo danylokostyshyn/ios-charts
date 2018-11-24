@@ -7,7 +7,6 @@
 
 import UIKit
 import Foundation
-import Charts
 
 @objc(ChartXAxisFormatter)
 public class XAxisFormatter: NSObject, AxisValueFormatter

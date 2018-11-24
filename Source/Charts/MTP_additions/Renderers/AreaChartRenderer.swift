@@ -28,19 +28,20 @@ open class AreaChartRenderer: LineScatterCandleRadarRenderer
             
             if set.isVisible
             {
-                if !(set is ScatterChartDataSetProtocol)
+                if !(set is AreaChartDataSetProtocol)
                 {
-                    fatalError("Datasets for AreaChartRenderer must conform to ScatterChartDataSetProtocol")
+                    fatalError("Datasets for AreaChartRenderer must conform to AreaChartDataSetProtocol")
                 }
                 
-                drawDataSet(context: context, dataSet: set as! ScatterChartDataSetProtocol)
+                drawDataSet(context: context, dataSet: set as! AreaChartDataSetProtocol)
             }
         }
     }
     
-    @objc open func drawDataSet(context: CGContext, dataSet: ScatterChartDataSetProtocol)
+    @objc open func drawDataSet(context: CGContext, dataSet: AreaChartDataSetProtocol)
     {
-        guard let dataProvider = dataProvider else { return }
+        guard let dataProvider = dataProvider,
+            let fillColor = dataSet.areafillColor else { return }
         
         let trans = dataProvider.getTransformer(forAxis: dataSet.axisDependency)
         
@@ -53,8 +54,7 @@ open class AreaChartRenderer: LineScatterCandleRadarRenderer
         let valueToPixelMatrix = trans.valueToPixelMatrix
         
         context.saveGState()
-        let color = dataSet.colors[0]
-        context.setFillColor(color.cgColor)
+        context.setFillColor(fillColor.cgColor)
         var first = true
         var firstPoint = CGPoint()
         

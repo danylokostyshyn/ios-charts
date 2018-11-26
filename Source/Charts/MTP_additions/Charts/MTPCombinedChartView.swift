@@ -10,6 +10,17 @@ import Foundation
 
 open class MTPCombinedChartView: CombinedChartView, MTPCombinedChartDataProvider
 {
+    /// enum that allows to specify the order in which the different data objects for the combined-chart are drawn
+    @objc(MTPCombinedChartMTPDrawOrder)
+    public enum MTPDrawOrder: Int
+    {
+        case bar
+        case bubble
+        case line
+        case candle
+        case scatter
+        case area
+    }
     
     open override func initialize()
     {

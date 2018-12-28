@@ -38,10 +38,6 @@ public protocol ChartViewDelegate
 open class ChartViewBase: NSUIView, ChartDataProvider, AnimatorDelegate
 {
     // MARK: - Properties
-    @objc public var annotationView: UIView?
-    
-    @objc public var currentValue: Double = 0.0
-    
     
     /// The default IValueFormatter that has been determined by the chart considering the provided minimum and maximum values.
     internal lazy var defaultValueFormatter: ValueFormatter = DefaultValueFormatter(decimals: 0)
@@ -80,9 +76,6 @@ open class ChartViewBase: NSUIView, ChartDataProvider, AnimatorDelegate
     /// if true, units are drawn next to the values in the chart
     // TODO: This is used nowhere and can't be used by a consumer. Can we remove this property?
     internal var _drawUnitInChart = false
-    
-    /// the number of x-values the chart displays
-    internal var _deltaX = Double(1.0)
 
     /// The object representing the labels on the x-axis
     @objc open internal(set) lazy var xAxis = XAxis()
@@ -269,8 +262,6 @@ open class ChartViewBase: NSUIView, ChartDataProvider, AnimatorDelegate
     {
         let optionalContext = NSUIGraphicsGetCurrentContext()
         guard let context = optionalContext else { return }
-        
-        showAnnotationView(highlight: highlighted.first)
 
         if data === nil && !noDataText.isEmpty
         {
@@ -357,7 +348,8 @@ open class ChartViewBase: NSUIView, ChartDataProvider, AnimatorDelegate
         lastHighlighted = highlighted.isEmpty
             ? nil
             : highlighted[0]
-        
+
+
         // redraw the chart
         setNeedsDisplay()
     }
@@ -391,8 +383,6 @@ open class ChartViewBase: NSUIView, ChartDataProvider, AnimatorDelegate
     @objc open func highlightValue(x: Double, dataSetIndex: Int, callDelegate: Bool)
     {
         highlightValue(x: x, y: Double.nan, dataSetIndex: dataSetIndex, callDelegate: callDelegate)
-        
-        showAnnotationView(highlight: lastHighlighted)
     }
     
     /// Highlights the value at the given x-value and y-value in the given DataSet.
@@ -878,49 +868,4 @@ open class ChartViewBase: NSUIView, ChartDataProvider, AnimatorDelegate
             super.nsuiTouchesCancelled(touches, withEvent: event)
         }
     }
-    
-    // MARK: -
-    
-    private func showAnnotationView(highlight: Highlight?) {
-        guard let view = annotationView,
-              let data = data,
-              let h = highlight else {
-                hideAnnotationView()
-                return
-        }
-
-        let xIndex = h.dataSetIndex
-
-        if (xIndex <= Int(_deltaX) && xIndex <= Int(_deltaX * chartAnimator.phaseX))
-        {
-            let e = data.entryForHighlight(h)
-            if (e === nil || e!.y != h.y)
-            {
-                hideAnnotationView()
-                return
-            }
-
-            let pos = CGPoint(x: h.xPx, y: h.yPx)
-            view.center = pos
-
-            let rect = view.frame.insetBy(dx: view.bounds.width/4, dy: view.bounds.height/4)
-            if (viewPortHandler.contentRect.contains(rect) != true)
-            {
-                hideAnnotationView()
-                return
-            }
-
-            if view.superview == nil {
-                addSubview(view)
-                setNeedsDisplay()
-            }
-        }
-    }
-    
-    private func hideAnnotationView() {
-        guard let view = annotationView else { return }
-        
-        view.removeFromSuperview()
-    }
-
 }

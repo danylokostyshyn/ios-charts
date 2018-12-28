@@ -148,67 +148,71 @@ open class YAxisRenderer: NSObject, AxisRenderer
                              attributes: [.font: labelFont, .foregroundColor: labelTextColor])
         }
         
-        if axis.drawCurrentValueLabel {
-            drawCurrentValueLabel(context: context, fixedPosition: fixedPosition, offset: offset, textAlign: textAlign)
-        }
+        // additions
+//        if axis.drawCurrentValueLabel {
+//            drawCurrentValueLabel(context: context, fixedPosition: fixedPosition, offset: offset, textAlign: textAlign)
+//        }
+        // end additions
     }
     
-    internal func drawCurrentValueLabel(context: CGContext, fixedPosition: CGFloat, offset: CGFloat, textAlign: NSTextAlignment)
-    {
-        guard let transformer = self.transformer else { return }
-        
-        let currentValue = axis.currentValue
-        let labelFont = axis.labelFont
-        let labelTextColor = axis.currentValueTextColor
-        let labelBackgroundColor = axis.currentValueBackgroundColor
-        
-        let valueToPixelMatrix = transformer.valueToPixelMatrix
-        
-        var pt = CGPoint()
-
-        pt = transformer.pixelForValues(x: 0, y: currentValue)
-        
-        pt.x = fixedPosition
-        pt.y += offset
-        
-        let formatterString = axis.format(number: currentValue)
-        
-        var rect = (formatterString as NSString).boundingRect(with: CGSize.zero, options: .usesFontLeading, attributes:  [.font: labelFont], context: nil)
-        rect.origin = pt
-        if axis.axisDependency == .left {
-            rect.origin.x -= rect.width
-        }
-        rect.insetBy(dx:  -5.0, dy:  -2.0)
-        if axis.drawArrowPointerEnabled {
-             rect.insetBy(dx:  3.0, dy: 0.0)
-        }
-
-        context.addRect(rect)
-        context.setFillColor(labelBackgroundColor.cgColor)
-        context.fillPath()
-        
-        if axis.drawArrowPointerEnabled {
-            switch axis.axisDependency {
-            case .left:
-                context.move(to:CGPoint(x: rect.maxX, y: rect.maxY))
-                context.addLine(to:CGPoint(x: rect.maxX + 5.0, y: rect.midY))
-                context.addLine(to:CGPoint(x: rect.maxX, y: rect.minY))
-                context.addLine(to:CGPoint(x: rect.maxX, y: rect.maxY))
-            case .right:
-                context.move   (to:CGPoint(x: rect.minX, y: rect.maxY))
-                context.addLine(to:CGPoint(x: rect.minX - 5.0, y: rect.midY))
-                context.addLine(to:CGPoint(x: rect.minX, y: rect.minY))
-                context.addLine(to:CGPoint(x: rect.minX, y: rect.maxY))
-            }
-            context.closePath()
-            context.fillPath()
-        }
-        
-        context.drawText(formatterString,
-                         at: pt,
-                         align: textAlign,
-                         attributes: [.font: labelFont, .foregroundColor: labelTextColor])
-    }
+    // additions
+//    internal func drawCurrentValueLabel(context: CGContext, fixedPosition: CGFloat, offset: CGFloat, textAlign: NSTextAlignment)
+//    {
+//        guard let transformer = self.transformer else { return }
+//
+//        let currentValue = axis.currentValue
+//        let labelFont = axis.labelFont
+//        let labelTextColor = axis.currentValueTextColor
+//        let labelBackgroundColor = axis.currentValueBackgroundColor
+//
+//        let valueToPixelMatrix = transformer.valueToPixelMatrix
+//
+//        var pt = CGPoint()
+//
+//        pt = transformer.pixelForValues(x: 0, y: currentValue)
+//
+//        pt.x = fixedPosition
+//        pt.y += offset
+//
+//        let formatterString = axis.format(number: currentValue)
+//
+//        var rect = (formatterString as NSString).boundingRect(with: CGSize.zero, options: .usesFontLeading, attributes:  [.font: labelFont], context: nil)
+//        rect.origin = pt
+//        if axis.axisDependency == .left {
+//            rect.origin.x -= rect.width
+//        }
+//        rect.insetBy(dx:  -5.0, dy:  -2.0)
+//        if axis.drawArrowPointerEnabled {
+//             rect.insetBy(dx:  3.0, dy: 0.0)
+//        }
+//
+//        context.addRect(rect)
+//        context.setFillColor(labelBackgroundColor.cgColor)
+//        context.fillPath()
+//
+//        if axis.drawArrowPointerEnabled {
+//            switch axis.axisDependency {
+//            case .left:
+//                context.move(to:CGPoint(x: rect.maxX, y: rect.maxY))
+//                context.addLine(to:CGPoint(x: rect.maxX + 5.0, y: rect.midY))
+//                context.addLine(to:CGPoint(x: rect.maxX, y: rect.minY))
+//                context.addLine(to:CGPoint(x: rect.maxX, y: rect.maxY))
+//            case .right:
+//                context.move   (to:CGPoint(x: rect.minX, y: rect.maxY))
+//                context.addLine(to:CGPoint(x: rect.minX - 5.0, y: rect.midY))
+//                context.addLine(to:CGPoint(x: rect.minX, y: rect.minY))
+//                context.addLine(to:CGPoint(x: rect.minX, y: rect.maxY))
+//            }
+//            context.closePath()
+//            context.fillPath()
+//        }
+//
+//        context.drawText(formatterString,
+//                         at: pt,
+//                         align: textAlign,
+//                         attributes: [.font: labelFont, .foregroundColor: labelTextColor])
+//    }
+    // end additions
 
     open func renderGridLines(context: CGContext)
     {

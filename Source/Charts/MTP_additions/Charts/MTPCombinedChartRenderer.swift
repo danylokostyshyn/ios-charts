@@ -68,7 +68,7 @@ open class MTPCombinedChartRenderer: CombinedChartRenderer
             case .candle:
                 if chart.candleData !== nil
                 {
-                    _renderers.append(CandleStickChartRenderer(dataProvider: chart, animator: animator, viewPortHandler: viewPortHandler))
+                    _renderers.append(MTPCandleStickChartRenderer(dataProvider: chart, animator: animator, viewPortHandler: viewPortHandler))
                 }
                 break
                 

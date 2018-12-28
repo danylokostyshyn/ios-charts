@@ -22,6 +22,59 @@ open class MTPCombinedChartView: CombinedChartView, MTPCombinedChartDataProvider
         case area
     }
     
+    // Overriding BarLineChartViewBase's leftAxis getter/setter to return mtpLeftAxis and avoid original value to be set
+    override open var leftAxis: YAxis {
+        get {
+            return mtpLeftAxis
+        }
+        set {
+            
+        }
+    }
+    
+    // Overriding BarLineChartViewBase's rightAxis getter/setter to return mtpRightAxis and avoid original value to be set
+    override open var rightAxis: YAxis {
+        get {
+            return mtpRightAxis
+        }
+        set {
+            
+        }
+    }
+    
+    // Overriding BarLineChartViewBase's leftYAxisRenderer getter/setter to return mtpLeftYAxisRenderer and avoid original value to be set
+    override open var leftYAxisRenderer: YAxisRenderer {
+        get {
+            return mtpLeftYAxisRenderer
+        }
+        set {
+            
+        }
+    }
+    
+    // Overriding BarLineChartViewBase's rightYAxisRenderer getter/setter to return mtpRightYAxisRenderer and avoid original value to be set
+    override open var rightYAxisRenderer: YAxisRenderer {
+        get {
+            return mtpRightYAxisRenderer
+        }
+        set {
+            
+        }
+    }
+    
+    // To replace BarLineChartViewBase's leftAxis
+    @objc open internal(set) var mtpLeftAxis = MTPYAxis(position: .left)
+    
+    // To replace BarLineChartViewBase's rightAxis
+    @objc open internal(set) var mtpRightAxis = MTPYAxis(position: .right)
+    
+    // To replace BarLineChartViewBase's leftYAxisRenderer
+    @objc open lazy var mtpLeftYAxisRenderer = MTPYAxisRenderer(viewPortHandler: viewPortHandler, axis: leftAxis, transformer: _leftAxisTransformer)
+    
+    // To replace BarLineChartViewBase's rightYAxisRenderer
+    @objc open lazy var mtpRightYAxisRenderer = MTPYAxisRenderer(viewPortHandler: viewPortHandler, axis: rightAxis, transformer: _rightAxisTransformer)
+    
+    
     @objc public var annotationView: UIView?
     @objc public var currentValue: Double = 0.0
     /// the number of x-values the chart displays

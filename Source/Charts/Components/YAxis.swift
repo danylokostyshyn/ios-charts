@@ -23,12 +23,14 @@ import CoreGraphics
 @objc(ChartYAxis)
 open class YAxis: AxisBase
 {
-    @objc public var drawCurrentValueLabel = false
-    @objc public var currentValueTextColor = UIColor.white
-    @objc public var currentValueBackgroundColor = UIColor.black
-    @objc public var drawArrowPointerEnabled = false
-    
-    @objc public var currentValue: Double = 0.0
+    // additions
+//    @objc public var drawCurrentValueLabel = false
+//    @objc public var currentValueTextColor = UIColor.white
+//    @objc public var currentValueBackgroundColor = UIColor.black
+//    @objc public var drawArrowPointerEnabled = false
+//
+//    @objc public var currentValue: Double = 0.0
+    // end additions
     
     @objc(YAxisLabelPosition)
     public enum LabelPosition: Int
@@ -130,10 +132,12 @@ open class YAxis: AxisBase
         return requiredSize().height
     }
     
-    public func format(number: Double) -> String
-    {
-        return valueFormatter?.stringForValue(number, axis: self)  ?? ""
-    }
+    // additions
+//    public func format(number: Double) -> String
+//    {
+//        return valueFormatter?.stringForValue(number, axis: self)  ?? ""
+//    }
+    // end additions
     
     /// - returns: `true` if this axis needs horizontal offset, `false` ifno offset is needed.
     @objc open var needsOffset: Bool

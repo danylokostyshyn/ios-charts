@@ -80,10 +80,6 @@ open class LineRadarChartDataSet: LineScatterCandleRadarChartDataSet, LineRadarC
         return drawFilledEnabled
     }
     
-    // additions
-//    public var areaRangeGroupIndex: Int = -1
-    // end additions
-    
     // MARK: NSCopying
     
     open override func copyWithZone(_ zone: NSZone?) -> AnyObject

@@ -15,11 +15,6 @@ import CoreGraphics
 
 open class ChartBaseDataSet: NSObject, ChartDataSetProtocol
 {
-    // additions
-//    @objc public var drawCurrentValueLine = false
-//    @objc public var currentValueLineColor = UIColor.black
-    // end additions
-    
     public required override init()
     {
         super.init()
@@ -82,7 +77,7 @@ open class ChartBaseDataSet: NSObject, ChartDataSetProtocol
     {
         fatalError("entryCount is not implemented in ChartBaseDataSet")
     }
-    
+        
     open func entryForIndex(_ i: Int) -> ChartDataEntry?
     {
         fatalError("entryForIndex is not implemented in ChartBaseDataSet")
@@ -196,7 +191,7 @@ open class ChartBaseDataSet: NSObject, ChartDataSetProtocol
     
     /// List representing all colors that are used for drawing the actual values for this DataSet
     open var valueColors = [NSUIColor]()
-    
+
     /// The label string that describes the DataSet.
     open var label: String? = "DataSet"
     
@@ -273,15 +268,15 @@ open class ChartBaseDataSet: NSObject, ChartDataSetProtocol
     
     /// - returns: `true` if value highlighting is enabled for this dataset
     open var isHighlightEnabled: Bool { return highlightEnabled }
-    
+        
     /// Custom formatter that is used instead of the auto-formatter if set
     open lazy var valueFormatter: ValueFormatter = DefaultValueFormatter()
-    
+
     /// Sets/get a single color for value text.
     /// Setting the color clears the colors array and adds a single color.
     /// Getting will return the first color in the array.
     open var valueTextColor: NSUIColor
-        {
+    {
         get
         {
             return valueColors[0]
@@ -342,7 +337,7 @@ open class ChartBaseDataSet: NSObject, ChartDataSetProtocol
     {
         return drawValuesEnabled
     }
-    
+
     /// Set this to true to draw y-icons on the chart.
     ///
     /// - note: For bar and line charts: if `maxVisibleCount` is reached, no icons will be drawn even if this is enabled.
@@ -354,7 +349,7 @@ open class ChartBaseDataSet: NSObject, ChartDataSetProtocol
         return drawIconsEnabled
     }
     
-    /// Offset of icons drawn on the chart.
+    /// Offset of icons drawn on the chart.  
     ///
     /// For all charts except Pie and Radar it will be ordinary (x offset, y offset).
     ///
@@ -402,4 +397,3 @@ open class ChartBaseDataSet: NSObject, ChartDataSetProtocol
         return copy
     }
 }
-

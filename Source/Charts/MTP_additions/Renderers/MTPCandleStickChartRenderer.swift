@@ -56,8 +56,6 @@ open class MTPCandleStickChartRenderer: CandleStickChartRenderer
                 endPointX = xOffset
             }
             
-            let data = dataProvider.candleData?.dataSets[0]
-            
             let point = transformer.pixelForValues(x: 0, y: currentValue)
             let y = point.y - 1
             

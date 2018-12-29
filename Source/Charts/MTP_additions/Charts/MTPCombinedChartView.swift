@@ -138,9 +138,6 @@ open class MTPCombinedChartView: CombinedChartView, MTPCombinedChartDataProvider
     {
         super.draw(rect)
         
-        let optionalContext = NSUIGraphicsGetCurrentContext()
-        guard let context = optionalContext else { return }
-        
         showAnnotationView(highlight: highlighted.first)
     }
     

@@ -54,8 +54,6 @@ open class MTPYAxisRenderer: YAxisRenderer
         let labelTextColor = mtpYAXis.currentValueTextColor
         let labelBackgroundColor = mtpYAXis.currentValueBackgroundColor
 
-        let valueToPixelMatrix = transformer.valueToPixelMatrix
-
         var pt = CGPoint()
 
         pt = transformer.pixelForValues(x: 0, y: currentValue)

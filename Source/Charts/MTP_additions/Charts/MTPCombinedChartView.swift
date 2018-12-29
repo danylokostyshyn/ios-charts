@@ -22,6 +22,16 @@ open class MTPCombinedChartView: CombinedChartView, MTPCombinedChartDataProvider
         case area
     }
     
+    // Overriding ChartViewBase's xAxis getter/setter to return mtpXAxis and avoid original value to be set
+    override open var xAxis: XAxis {
+        get {
+            return mtpXAxis
+        }
+        set {
+            
+        }
+    }
+    
     // Overriding BarLineChartViewBase's leftAxis getter/setter to return mtpLeftAxis and avoid original value to be set
     override open var leftAxis: YAxis {
         get {
@@ -52,6 +62,16 @@ open class MTPCombinedChartView: CombinedChartView, MTPCombinedChartDataProvider
         }
     }
     
+    // Overriding ChartViewBase's xAxisRenderer getter/setter to return mtpXAxisRenderer and avoid original value to be set
+    override open var xAxisRenderer: XAxisRenderer {
+        get {
+            return mtpXAxisRenderer
+        }
+        set {
+            
+        }
+    }
+    
     // Overriding BarLineChartViewBase's rightYAxisRenderer getter/setter to return mtpRightYAxisRenderer and avoid original value to be set
     override open var rightYAxisRenderer: YAxisRenderer {
         get {
@@ -62,11 +82,17 @@ open class MTPCombinedChartView: CombinedChartView, MTPCombinedChartDataProvider
         }
     }
     
+    // To replace ChartViewBase's xAxis
+    @objc open internal(set) var mtpXAxis = MTPXAxis()
+    
     // To replace BarLineChartViewBase's leftAxis
     @objc open internal(set) var mtpLeftAxis = MTPYAxis(position: .left)
     
     // To replace BarLineChartViewBase's rightAxis
     @objc open internal(set) var mtpRightAxis = MTPYAxis(position: .right)
+    
+    // To replace ChartViewBase's xAxisRenderer
+    @objc open lazy var mtpXAxisRenderer = MTPXAxisRenderer(viewPortHandler: viewPortHandler, axis: xAxis, transformer: _leftAxisTransformer)
     
     // To replace BarLineChartViewBase's leftYAxisRenderer
     @objc open lazy var mtpLeftYAxisRenderer = MTPYAxisRenderer(viewPortHandler: viewPortHandler, axis: leftAxis, transformer: _leftAxisTransformer)

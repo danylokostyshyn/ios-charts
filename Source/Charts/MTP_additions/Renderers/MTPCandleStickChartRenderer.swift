@@ -16,7 +16,7 @@ open class MTPCandleStickChartRenderer: CandleStickChartRenderer
         
         guard let dataProvider = dataProvider,
             let candleData = dataProvider.candleData,
-            let dataSet = candleData.dataSets.first as? ChartBaseDataSet  else { return }
+            let dataSet = candleData.dataSets.first as? MTPCandleChartDataSet  else { return }
         
         if dataSet.drawCurrentValueLine {
             drawCurrentValueLine(context: context)
@@ -25,19 +25,23 @@ open class MTPCandleStickChartRenderer: CandleStickChartRenderer
     
     public func drawCurrentValueLine(context: CGContext)
     {
-        guard let candleData = dataProvider?.candleData,
-            let currentValue = dataProvider?.currentValue else { return }
+        guard let dataProvider = dataProvider as? MTPCombinedChartDataProvider,
+            let candleData = dataProvider.candleData else {
+                print("Expected MTPCombinedChartDataProvider !")
+                return
+        }
+        
+        let currentValue = dataProvider.currentValue
         
         var dataSets = candleData.dataSets
         for (i, _) in dataSets.enumerated()
         {
             let dataSet = dataSets[i]
             
-            guard let transformer = dataProvider?.getTransformer(forAxis: dataSet.axisDependency)
-                else { continue }
+            let transformer = dataProvider.getTransformer(forAxis: dataSet.axisDependency)
             
             var lineColor = UIColor.black
-            if let dataSet = dataSet as? ChartDataSet {
+            if let dataSet = dataSet as? MTPCandleChartDataSet {
                 lineColor = dataSet.currentValueLineColor
             }
             
@@ -52,7 +56,7 @@ open class MTPCandleStickChartRenderer: CandleStickChartRenderer
                 endPointX = xOffset
             }
             
-            let data = dataProvider?.candleData?.dataSets[0]
+            let data = dataProvider.candleData?.dataSets[0]
             
             let point = transformer.pixelForValues(x: 0, y: currentValue)
             let y = point.y - 1

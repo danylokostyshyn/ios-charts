@@ -12,4 +12,6 @@ import CoreGraphics
 public protocol MTPCombinedChartDataProvider: CombinedChartDataProvider, AreaChartDataProvider
 {
     var mtpCombinedData: MTPCombinedChartData? { get }
+    
+    @objc var currentValue: Double { get }
 }

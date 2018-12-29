@@ -15,8 +15,10 @@ import CoreGraphics
 
 open class ChartBaseDataSet: NSObject, ChartDataSetProtocol
 {
-    @objc public var drawCurrentValueLine = false
-    @objc public var currentValueLineColor = UIColor.black
+    // additions
+//    @objc public var drawCurrentValueLine = false
+//    @objc public var currentValueLineColor = UIColor.black
+    // end additions
     
     public required override init()
     {

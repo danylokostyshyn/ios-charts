@@ -37,5 +37,7 @@ public protocol ChartDataProvider
     
     var maxVisibleCount: Int { get }
     
-    @objc optional var currentValue: Double { get }
+    // additions
+//    @objc optional var currentValue: Double { get }
+    // end additions
 }

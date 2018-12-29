@@ -32,7 +32,9 @@ open class AxisBase: ComponentBase
     @objc open var axisLineDashPhase = CGFloat(0.0)
     @objc open var axisLineDashLengths: [CGFloat]!
     
-    @objc public var evenBarsColor = UIColor.clear
+    // additions
+//    @objc public var evenBarsColor = UIColor.clear
+    // end additions
 
     
     @objc open var gridColor = NSUIColor.gray.withAlphaComponent(0.9)

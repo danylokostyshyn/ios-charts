@@ -80,7 +80,9 @@ open class LineRadarChartDataSet: LineScatterCandleRadarChartDataSet, LineRadarC
         return drawFilledEnabled
     }
     
-    public var areaRangeGroupIndex: Int = -1
+    // additions
+//    public var areaRangeGroupIndex: Int = -1
+    // end additions
     
     // MARK: NSCopying
     

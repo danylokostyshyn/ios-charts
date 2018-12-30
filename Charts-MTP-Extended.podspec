@@ -16,7 +16,7 @@ MTP extension adds support for Current Price Line in Candle charts, even/odd cha
   s.ios.deployment_target = "8.0"
   s.tvos.deployment_target = "9.0"
   s.osx.deployment_target = "10.11"
-  s.source = { :git => "https://github.com/MobileTradingPartnersLLP/ios-charts", :tag => s.version.to_s }
+  s.source = { :git => "https://github.com/MobileTradingPartnersLLP/ios-charts", :tag => "mtp.#{s.version.to_s}" }
   s.default_subspec = "Core"
 
   s.subspec "Core" do |ss|

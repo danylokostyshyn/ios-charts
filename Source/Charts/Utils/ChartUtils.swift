@@ -137,7 +137,7 @@ extension CGContext {
         NSUIGraphicsPopContext()
     }
 
-    open func drawText(_ text: String, at point: CGPoint, align: NSTextAlignment, attributes: [NSAttributedStringKey : Any]?)
+    open func drawText(_ text: String, at point: CGPoint, align: NSTextAlignment, attributes: [NSAttributedString.Key : Any]?)
     {
         var point = point
 
@@ -157,7 +157,7 @@ extension CGContext {
         NSUIGraphicsPopContext()
     }
 
-    open func drawText(_ text: String, at point: CGPoint, anchor: CGPoint, angleRadians: CGFloat, attributes: [NSAttributedStringKey : Any]?)
+    open func drawText(_ text: String, at point: CGPoint, anchor: CGPoint, angleRadians: CGFloat, attributes: [NSAttributedString.Key : Any]?)
     {
         var drawOffset = CGPoint()
 
@@ -209,7 +209,7 @@ extension CGContext {
         NSUIGraphicsPopContext()
     }
 
-    func drawMultilineText(_ text: String, at point: CGPoint, constrainedTo size: CGSize, anchor: CGPoint, knownTextSize: CGSize, angleRadians: CGFloat, attributes: [NSAttributedStringKey : Any]?)
+    func drawMultilineText(_ text: String, at point: CGPoint, constrainedTo size: CGSize, anchor: CGPoint, knownTextSize: CGSize, angleRadians: CGFloat, attributes: [NSAttributedString.Key : Any]?)
     {
         var rect = CGRect(origin: .zero, size: knownTextSize)
 
@@ -257,7 +257,7 @@ extension CGContext {
         NSUIGraphicsPopContext()
     }
 
-    func drawMultilineText(_ text: String, at point: CGPoint, constrainedTo size: CGSize, anchor: CGPoint, angleRadians: CGFloat, attributes: [NSAttributedStringKey : Any]?)
+    func drawMultilineText(_ text: String, at point: CGPoint, constrainedTo size: CGSize, anchor: CGPoint, angleRadians: CGFloat, attributes: [NSAttributedString.Key : Any]?)
     {
         let rect = text.boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
         drawMultilineText(text, at: point, constrainedTo: size, anchor: anchor, knownTextSize: rect.size, angleRadians: angleRadians, attributes: attributes)

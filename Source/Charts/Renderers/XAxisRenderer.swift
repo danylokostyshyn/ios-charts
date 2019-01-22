@@ -293,9 +293,9 @@ open class XAxisRenderer: NSObject, AxisRenderer
         #endif
         paraStyle.alignment = .center
         
-        let labelAttrs: [NSAttributedStringKey : Any] = [.font: axis.labelFont,
-                                                         .foregroundColor: axis.labelTextColor,
-                                                         .paragraphStyle: paraStyle]
+        let labelAttrs: [NSAttributedString.Key : Any] = [.font: axis.labelFont,
+                                                          .foregroundColor: axis.labelTextColor,
+                                                          .paragraphStyle: paraStyle]
         let labelRotationAngleRadians = axis.labelRotationAngle.DEG2RAD
 
         let centeringEnabled = axis.isCenterAxisLabelsEnabled
@@ -370,7 +370,7 @@ open class XAxisRenderer: NSObject, AxisRenderer
         formattedLabel: String,
         x: CGFloat,
         y: CGFloat,
-        attributes: [NSAttributedStringKey : Any],
+        attributes: [NSAttributedString.Key : Any],
         constrainedTo size: CGSize,
         anchor: CGPoint,
         angleRadians: CGFloat)

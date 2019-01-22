@@ -867,8 +867,8 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
             let velocity = _panGestureRecognizer.velocity(in: self)
             if data === nil || !isDragEnabled ||
                 (self.hasNoDragOffset && self.isFullyZoomedOut && !self.isHighlightPerDragEnabled) ||
-                (!_dragYEnabled && fabs(velocity.y) > fabs(velocity.x)) ||
-                (!_dragXEnabled && fabs(velocity.y) < fabs(velocity.x))
+                (!_dragYEnabled && abs(velocity.y) > abs(velocity.x)) ||
+                (!_dragXEnabled && abs(velocity.y) < abs(velocity.x))
             {
                 return false
             }
@@ -1686,7 +1686,7 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
         let h = getHighlightByTouchPoint(pt)
         if h !== nil
         {
-            return data?.getDataSetByIndex(h!.dataSetIndex) as! BarLineScatterCandleBubbleChartDataSetProtocol
+            return data?.getDataSetByIndex(h!.dataSetIndex) as? BarLineScatterCandleBubbleChartDataSetProtocol
         }
         return nil
     }

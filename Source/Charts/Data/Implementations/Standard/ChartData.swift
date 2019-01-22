@@ -355,7 +355,7 @@ open class ChartData: NSObject, ExpressibleByArrayLiteral
     /// - returns: The labels of all DataSets as a string array.
     internal func dataSetLabels() -> [String]
     {
-        return flatMap { $0.label }
+        return compactMap { $0.label }
     }
     
     /// Get the Entry for a corresponding highlight object

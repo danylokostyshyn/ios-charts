@@ -5,8 +5,11 @@
 //  Created by aternovyy on 1/29/18.
 //
 
-import UIKit
 import Foundation
+
+#if !os(OSX)
+import UIKit
+#endif
 
 @objc(ChartXAxisFormatter)
 public class XAxisFormatter: NSObject, AxisValueFormatter

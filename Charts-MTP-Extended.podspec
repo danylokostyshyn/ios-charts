@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = "Charts-MTP-Extended"
-  s.version = "3.0.6"
+  s.version = "3.0.7"
   s.summary          = 'MTP extension of Daniel Cohen Gindi\'s ios-charts'
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -14,8 +14,6 @@ MTP extension adds support for Current Price Line in Candle charts, even/odd cha
   s.license          = 'PROPRIETARY'
   s.author           = { "Romano Bayol" => "romano@socialmobiletrading.com" }
   s.ios.deployment_target = "8.0"
-  s.tvos.deployment_target = "9.0"
-  s.osx.deployment_target = "10.11"
   s.source = { :git => "https://github.com/MobileTradingPartnersLLP/ios-charts", :tag => "mtp.#{s.version.to_s}" }
   s.default_subspec = "Core"
   s.swift_version = '4.2'

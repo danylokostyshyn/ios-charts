@@ -24,7 +24,7 @@ open class AreaChartRenderer: LineScatterCandleRadarRenderer
         
         for i in 0 ..< areaData.dataSetCount
         {
-            guard let set = areaData.getDataSetByIndex(i) else { continue }
+            guard let set = areaData.dataSet(at: i) else { continue }
             
             if set.isVisible
             {

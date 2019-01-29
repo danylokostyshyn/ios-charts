@@ -141,9 +141,9 @@ open class MTPCombinedChartView: CombinedChartView, MTPCombinedChartDataProvider
         showAnnotationView(highlight: highlighted.first)
     }
     
-    @objc open override func highlightValue(x: Double, y: Double, dataSetIndex: Int, dataIndex: Int = -1, callDelegate: Bool)
+    @objc open override func highlightValue(x: Double, dataSetIndex: Int, callDelegate: Bool)
     {
-        super.highlightValue(x: y, y: y, dataSetIndex: dataSetIndex, dataIndex: dataIndex, callDelegate: callDelegate)
+        super.highlightValue(x: x, dataSetIndex: dataSetIndex, callDelegate: callDelegate)
         
         showAnnotationView(highlight: lastHighlighted)
     }
@@ -160,7 +160,7 @@ open class MTPCombinedChartView: CombinedChartView, MTPCombinedChartDataProvider
         
         if (xIndex <= Int(_deltaX) && xIndex <= Int(_deltaX * chartAnimator.phaseX))
         {
-            let e = data.entry(for: h)
+            let e = data.entryForHighlight(h)
             if (e === nil || e!.y != h.y)
             {
                 hideAnnotationView()

@@ -169,13 +169,14 @@ open class MTPCombinedChartView: CombinedChartView, MTPCombinedChartDataProvider
             
             let pos = CGPoint(x: h.xPx, y: h.yPx)
             view.center = pos
-            
-            let rect = view.frame.insetBy(dx: view.bounds.width/4, dy: view.bounds.height/4)
-            if (viewPortHandler.contentRect.contains(rect) != true)
-            {
-                hideAnnotationView()
-                return
-            }
+            // Do not cross left border
+            view.frame.origin.x = max(view.frame.origin.x, viewPortHandler.offsetLeft)
+            // Do not cross right border
+            view.frame.origin.x = min(view.frame.origin.x + view.frame.width, frame.width - viewPortHandler.offsetRight) - view.frame.width
+            // Do not cross top border
+            view.frame.origin.y = max(view.frame.origin.y, viewPortHandler.offsetTop)
+            // Do not cross bottom border
+            view.frame.origin.y = min(view.frame.origin.y + view.frame.height, frame.height - viewPortHandler.offsetBottom) - view.frame.height
             
             if view.superview == nil {
                 addSubview(view)

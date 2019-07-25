@@ -55,7 +55,7 @@ public class XAxisFormatter: NSObject, AxisValueFormatter
     {
         let index = Int(value)
         
-        if self.values.count <= index  { return "" }
+        if index < 0 || self.values.count <= index  { return "" }
         guard let dateFormatter = dateFormatter else { return ""}
 
         let timestamp = self.values[index]

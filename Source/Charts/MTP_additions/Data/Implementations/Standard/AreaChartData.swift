@@ -10,17 +10,12 @@ import CoreGraphics
 
 open class AreaChartData : ScatterChartData
 {
-    public required init()
-    {
-        super.init()
-    }
-    
-    public override init(dataSets: [ChartDataSetProtocol]?)
+    public override init(dataSets: [IChartDataSet]?)
     {
         super.init(dataSets: dataSets)
     }
     
-    public required init(arrayLiteral elements: ChartDataSetProtocol...)
+    public required init(arrayLiteral elements: IChartDataSet...)
     {
         super.init(dataSets: elements)
     }

@@ -11,17 +11,12 @@ open class MTPCombinedChartData : CombinedChartData
 {
     private var _areaData: AreaChartData!
     
-    public required init()
-    {
-        super.init()
-    }
-    
-    public override init(dataSets: [ChartDataSetProtocol]?)
+    public override init(dataSets: [IChartDataSet]?)
     {
         super.init(dataSets: dataSets)
     }
     
-    public required init(arrayLiteral elements: ChartDataSetProtocol...)
+    public required init(arrayLiteral elements: IChartDataSet...)
     {
         super.init(dataSets: elements)
     }

@@ -12,15 +12,18 @@ open class MTPXAxisRenderer: XAxisRenderer
     
     open override func renderGridLines(context: CGContext)
     {
-        guard let transformer = self.transformer else { return }
+        guard
+            let xAxis = self.axis as? XAxis,
+            let transformer = self.transformer
+            else { return }
         
-        guard let mtpXAxis = axis as? MTPXAxis else {
-            print("expected MTPXAxis !")
+        if !xAxis.isDrawGridLinesEnabled || !xAxis.isEnabled
+        {
             return
         }
         
-        if !axis.isDrawGridLinesEnabled || !axis.isEnabled
-        {
+        guard let mtpXAxis = axis as? MTPXAxis else {
+            print("expected MTPXAxis !")
             return
         }
         
@@ -32,14 +35,14 @@ open class MTPXAxisRenderer: XAxisRenderer
         defer { context.restoreGState() }
         context.clip(to: self.gridClippingRect)
         
-        context.setShouldAntialias(axis.gridAntialiasEnabled)
-        context.setStrokeColor(axis.gridColor.cgColor)
-        context.setLineWidth(axis.gridLineWidth)
-        context.setLineCap(axis.gridLineCap)
+        context.setShouldAntialias(xAxis.gridAntialiasEnabled)
+        context.setStrokeColor(xAxis.gridColor.cgColor)
+        context.setLineWidth(xAxis.gridLineWidth)
+        context.setLineCap(xAxis.gridLineCap)
         
-        if axis.gridLineDashLengths != nil
+        if xAxis.gridLineDashLengths != nil
         {
-            context.setLineDash(phase: axis.gridLineDashPhase, lengths: axis.gridLineDashLengths)
+            context.setLineDash(phase: xAxis.gridLineDashPhase, lengths: xAxis.gridLineDashLengths)
         }
         else
         {
@@ -50,7 +53,7 @@ open class MTPXAxisRenderer: XAxisRenderer
         
         var position = CGPoint(x: 0.0, y: 0.0)
         
-        let entries = axis.entries
+        let entries = xAxis.entries
         
         // additions
         var itter = 0

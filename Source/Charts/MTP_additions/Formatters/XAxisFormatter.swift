@@ -12,7 +12,7 @@ import UIKit
 #endif
 
 @objc(ChartXAxisFormatter)
-public class XAxisFormatter: NSObject, AxisValueFormatter
+public class XAxisFormatter: NSObject, IAxisValueFormatter
 {
     private var _values: [NSNumber] = [NSNumber]()
     private var _valueCount: Int = 0

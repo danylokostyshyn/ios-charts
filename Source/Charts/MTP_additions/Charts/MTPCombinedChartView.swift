@@ -92,13 +92,13 @@ open class MTPCombinedChartView: CombinedChartView, MTPCombinedChartDataProvider
     @objc open internal(set) var mtpRightAxis = MTPYAxis(position: .right)
     
     // To replace ChartViewBase's xAxisRenderer
-    @objc open lazy var mtpXAxisRenderer = MTPXAxisRenderer(viewPortHandler: viewPortHandler, axis: xAxis, transformer: _leftAxisTransformer)
+    @objc open lazy var mtpXAxisRenderer = MTPXAxisRenderer(viewPortHandler: viewPortHandler, xAxis: xAxis, transformer: _leftAxisTransformer)
     
     // To replace BarLineChartViewBase's leftYAxisRenderer
-    @objc open lazy var mtpLeftYAxisRenderer = MTPYAxisRenderer(viewPortHandler: viewPortHandler, axis: leftAxis, transformer: _leftAxisTransformer)
+    @objc open lazy var mtpLeftYAxisRenderer = MTPYAxisRenderer(viewPortHandler: viewPortHandler, yAxis: leftAxis, transformer: _leftAxisTransformer)
     
     // To replace BarLineChartViewBase's rightYAxisRenderer
-    @objc open lazy var mtpRightYAxisRenderer = MTPYAxisRenderer(viewPortHandler: viewPortHandler, axis: rightAxis, transformer: _rightAxisTransformer)
+    @objc open lazy var mtpRightYAxisRenderer = MTPYAxisRenderer(viewPortHandler: viewPortHandler, yAxis: rightAxis, transformer: _rightAxisTransformer)
     
     
     @objc public var annotationView: UIView?
@@ -141,9 +141,15 @@ open class MTPCombinedChartView: CombinedChartView, MTPCombinedChartDataProvider
         showAnnotationView(highlight: highlighted.first)
     }
     
-    @objc open override func highlightValue(x: Double, dataSetIndex: Int, callDelegate: Bool)
-    {
-        super.highlightValue(x: x, dataSetIndex: dataSetIndex, callDelegate: callDelegate)
+//    @objc open override func highlightValue(x: Double, dataSetIndex: Int, callDelegate: Bool)
+//    {
+//        super.highlightValue(x: x, dataSetIndex: dataSetIndex, callDelegate: callDelegate)
+//
+//        showAnnotationView(highlight: lastHighlighted)
+//    }
+    
+    @objc open override func highlightValue(_ highlight: Highlight?, callDelegate: Bool) {
+        super.highlightValue(highlight, callDelegate: callDelegate)
         
         showAnnotationView(highlight: lastHighlighted)
     }

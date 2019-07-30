@@ -18,20 +18,27 @@ open class MTPYAxisRenderer: YAxisRenderer
         offset: CGFloat,
         textAlign: NSTextAlignment)
     {
-        let labelFont = axis.labelFont
-        let labelTextColor = axis.labelTextColor
+        guard
+            let yAxis = self.axis as? YAxis
+            else { return }
         
-        let from = axis.isDrawBottomYLabelEntryEnabled ? 0 : 1
-        let to = axis.isDrawTopYLabelEntryEnabled ? axis.entryCount : (axis.entryCount - 1)
+        let labelFont = yAxis.labelFont
+        let labelTextColor = yAxis.labelTextColor
+        
+        let from = yAxis.isDrawBottomYLabelEntryEnabled ? 0 : 1
+        let to = yAxis.isDrawTopYLabelEntryEnabled ? yAxis.entryCount : (yAxis.entryCount - 1)
         
         for i in stride(from: from, to: to, by: 1)
         {
-            let text = axis.getFormattedLabel(i)
+            let text = yAxis.getFormattedLabel(i)
             
-            context.drawText(text,
-                             at: CGPoint(x: fixedPosition, y: positions[i].y + offset),
-                             align: textAlign,
-                             attributes: [.font: labelFont, .foregroundColor: labelTextColor])
+            ChartUtils.drawText(
+                context: context,
+                text: text,
+                point: CGPoint(x: fixedPosition, y: positions[i].y + offset),
+                align: textAlign,
+                attributes: [.font: labelFont, .foregroundColor: labelTextColor]
+            )
         }
         
         // additions
@@ -94,10 +101,17 @@ open class MTPYAxisRenderer: YAxisRenderer
             context.fillPath()
         }
 
-        context.drawText(formatterString,
-                         at: pt,
-                         align: textAlign,
-                         attributes: [.font: labelFont, .foregroundColor: labelTextColor])
+//        context.drawText(formatterString,
+//                         at: pt,
+//                         align: textAlign,
+//                         attributes: [.font: labelFont, .foregroundColor: labelTextColor])
+        ChartUtils.drawText(
+            context: context,
+            text: formatterString,
+            point: pt,
+            align: textAlign,
+            attributes: [.font: labelFont, .foregroundColor: labelTextColor]
+        )
     }
     // end additions
 }

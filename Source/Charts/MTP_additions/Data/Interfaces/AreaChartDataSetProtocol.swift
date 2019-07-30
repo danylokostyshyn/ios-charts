@@ -9,7 +9,7 @@ import Foundation
 import CoreGraphics
 
 @objc
-public protocol AreaChartDataSetProtocol: LineScatterCandleRadarChartDataSetProtocol
+public protocol AreaChartDataSetProtocol: ILineScatterCandleRadarChartDataSet
 {
     // MARK: - Data functions and accessors
     

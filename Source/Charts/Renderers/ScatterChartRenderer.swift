@@ -12,11 +12,6 @@
 import Foundation
 import CoreGraphics
 
-#if !os(OSX)
-    import UIKit
-#endif
-
-
 open class ScatterChartRenderer: LineScatterCandleRadarRenderer
 {
     @objc open weak var dataProvider: ScatterChartDataProvider?
@@ -27,30 +22,44 @@ open class ScatterChartRenderer: LineScatterCandleRadarRenderer
         
         self.dataProvider = dataProvider
     }
-    
+
     open override func drawData(context: CGContext)
     {
         guard let scatterData = dataProvider?.scatterData else { return }
+
+        // If we redraw the data, remove and repopulate accessible elements to update label values and frames
+        accessibleChartElements.removeAll()
         
+        if let chart = dataProvider as? ScatterChartView {
+            // Make the chart header the first element in the accessible elements array
+            let element = createAccessibleHeader(usingChart: chart,
+                                                 andData: scatterData,
+                                                 withDefaultDescription: "Scatter Chart")
+            accessibleChartElements.append(element)
+        }
+
+        // TODO: Due to the potential complexity of data presented in Scatter charts, a more usable way
+        // for VO accessibility would be to use axis based traversal rather than by dataset.
+        // Hence, accessibleChartElements is not populated below. (Individual renderers guard against dataSource being their respective views)
         for i in 0 ..< scatterData.dataSetCount
         {
             guard let set = scatterData.getDataSetByIndex(i) else { continue }
             
             if set.isVisible
             {
-                if !(set is ScatterChartDataSetProtocol)
+                if !(set is IScatterChartDataSet)
                 {
-                    fatalError("Datasets for ScatterChartRenderer must conform to ScatterChartDataSetProtocol")
+                    fatalError("Datasets for ScatterChartRenderer must conform to IScatterChartDataSet")
                 }
                 
-                drawDataSet(context: context, dataSet: set as! ScatterChartDataSetProtocol)
+                drawDataSet(context: context, dataSet: set as! IScatterChartDataSet)
             }
         }
     }
     
     private var _lineSegments = [CGPoint](repeating: CGPoint(), count: 2)
     
-    @objc open func drawDataSet(context: CGContext, dataSet: ScatterChartDataSetProtocol)
+    @objc open func drawDataSet(context: CGContext, dataSet: IScatterChartDataSet)
     {
         guard let dataProvider = dataProvider else { return }
         
@@ -94,7 +103,7 @@ open class ScatterChartRenderer: LineScatterCandleRadarRenderer
         }
         else
         {
-            print("There's no ShapeRenderer specified for ScatterDataSet", terminator: "\n")
+            print("There's no IShapeRenderer specified for ScatterDataSet", terminator: "\n")
         }
     }
     
@@ -108,7 +117,7 @@ open class ScatterChartRenderer: LineScatterCandleRadarRenderer
         // if values are drawn
         if isDrawingValuesAllowed(dataProvider: dataProvider)
         {
-            guard let dataSets = scatterData.dataSets as? [ScatterChartDataSetProtocol] else { return }
+            guard let dataSets = scatterData.dataSets as? [IScatterChartDataSet] else { return }
             
             let phaseY = animator.phaseY
             
@@ -117,15 +126,12 @@ open class ScatterChartRenderer: LineScatterCandleRadarRenderer
             for i in 0 ..< scatterData.dataSetCount
             {
                 let dataSet = dataSets[i]
-                
-                if !shouldDrawValues(forDataSet: dataSet)
-                {
-                    continue
-                }
+                guard let
+                    formatter = dataSet.valueFormatter,
+                    shouldDrawValues(forDataSet: dataSet)
+                    else { continue }
                 
                 let valueFont = dataSet.valueFont
-                
-                let formatter = dataSet.valueFormatter
                 
                 let trans = dataProvider.getTransformer(forAxis: dataSet.axisDependency)
                 let valueToPixelMatrix = trans.valueToPixelMatrix
@@ -137,7 +143,7 @@ open class ScatterChartRenderer: LineScatterCandleRadarRenderer
                 
                 _xBounds.set(chart: dataProvider, dataSet: dataSet, animator: animator)
                 
-                for j in stride(from: _xBounds.min, through: _xBounds.range + _xBounds.min, by: 1)
+                for j in _xBounds
                 {
                     guard let e = dataSet.entryForIndex(j) else { break }
                     
@@ -165,21 +171,24 @@ open class ScatterChartRenderer: LineScatterCandleRadarRenderer
                     
                     if dataSet.isDrawValuesEnabled
                     {
-                        context.drawText(text,
-                                         at: CGPoint(x: pt.x,
-                                                     y: pt.y - shapeSize - lineHeight),
-                                         align: .center,
-                                         attributes: [.font: valueFont,
-                                                      .foregroundColor: dataSet.valueTextColorAt(j)]
+                        ChartUtils.drawText(
+                            context: context,
+                            text: text,
+                            point: CGPoint(
+                                x: pt.x,
+                                y: pt.y - shapeSize - lineHeight),
+                            align: .center,
+                            attributes: [NSAttributedString.Key.font: valueFont, NSAttributedString.Key.foregroundColor: dataSet.valueTextColorAt(j)]
                         )
                     }
                     
                     if let icon = e.icon, dataSet.isDrawIconsEnabled
                     {
-                        context.drawImage(icon,
-                                          atCenter: CGPoint(x: pt.x + iconsOffset.x,
-                                                          y: pt.y + iconsOffset.y),
-                                          size: icon.size)
+                        ChartUtils.drawImage(context: context,
+                                             image: icon,
+                                             x: pt.x + iconsOffset.x,
+                                             y: pt.y + iconsOffset.y,
+                                             size: icon.size)
                     }
                 }
             }
@@ -203,7 +212,7 @@ open class ScatterChartRenderer: LineScatterCandleRadarRenderer
         for high in indices
         {
             guard
-                let set = scatterData.getDataSetByIndex(high.dataSetIndex) as? ScatterChartDataSetProtocol,
+                let set = scatterData.getDataSetByIndex(high.dataSetIndex) as? IScatterChartDataSet,
                 set.isHighlightEnabled
                 else { continue }
             

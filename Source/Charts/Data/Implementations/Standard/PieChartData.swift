@@ -13,26 +13,35 @@ import Foundation
 
 open class PieChartData: ChartData
 {
-    public required init()
+    public override init()
     {
         super.init()
     }
     
-    public override init(dataSets: [ChartDataSetProtocol]?)
+    public override init(dataSets: [IChartDataSet]?)
     {
         super.init(dataSets: dataSets)
     }
 
-    public required init(arrayLiteral elements: ChartDataSetProtocol...)
-    {
-        super.init(dataSets: elements)
-    }
-
-    @objc var dataSet: PieChartDataSetProtocol?
+    /// All DataSet objects this ChartData object holds.
+    @objc open override var dataSets: [IChartDataSet]
     {
         get
         {
-            return dataSets.count > 0 ? dataSets[0] as? PieChartDataSetProtocol : nil
+            assert(super.dataSets.count <= 1, "Found multiple data sets while pie chart only allows one")
+            return super.dataSets
+        }
+        set
+        {
+            super.dataSets = newValue
+        }
+    }
+
+    @objc var dataSet: IPieChartDataSet?
+    {
+        get
+        {
+            return dataSets.count > 0 ? dataSets[0] as? IPieChartDataSet : nil
         }
         set
         {
@@ -47,7 +56,7 @@ open class PieChartData: ChartData
         }
     }
     
-    open override func getDataSetByIndex(_ index: Int) -> ChartDataSetProtocol?
+    open override func getDataSetByIndex(_ index: Int) -> IChartDataSet?
     {
         if index != 0
         {
@@ -56,7 +65,7 @@ open class PieChartData: ChartData
         return super.getDataSetByIndex(index)
     }
     
-    open override func getDataSetByLabel(_ label: String, ignorecase: Bool) -> ChartDataSetProtocol?
+    open override func getDataSetByLabel(_ label: String, ignorecase: Bool) -> IChartDataSet?
     {
         if dataSets.count == 0 || dataSets[0].label == nil
         {
@@ -85,18 +94,31 @@ open class PieChartData: ChartData
         return dataSet?.entryForIndex(Int(highlight.x))
     }
     
-    /// - returns: The total y-value sum across all DataSet objects the this object represents.
+    open override func addDataSet(_ d: IChartDataSet!)
+    {   
+        super.addDataSet(d)
+    }
+    
+    /// Removes the DataSet at the given index in the DataSet array from the data object.
+    /// Also recalculates all minimum and maximum values.
+    ///
+    /// - Returns: `true` if a DataSet was removed, `false` ifno DataSet could be removed.
+    open override func removeDataSetByIndex(_ index: Int) -> Bool
+    {
+        if index >= _dataSets.count || index < 0
+        {
+            return false
+        }
+        
+        return false
+    }
+    
+    /// The total y-value sum across all DataSet objects the this object represents.
     @objc open var yValueSum: Double
     {
         guard let dataSet = dataSet else { return 0.0 }
-        
-        var yValueSum: Double = 0.0
-        
-        for i in 0..<dataSet.entryCount
-        {
-            yValueSum += dataSet.entryForIndex(i)?.y ?? 0.0
+        return (0..<dataSet.entryCount).reduce(into: 0) {
+            $0 += dataSet.entryForIndex($1)?.y ?? 0
         }
-        
-        return yValueSum
     }
 }

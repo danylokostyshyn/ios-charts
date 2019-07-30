@@ -1,5 +1,5 @@
 //
-//  BarChartDataSetProtocol.swift
+//  IBarChartDataSet.swift
 //  Charts
 //
 //  Copyright 2015 Daniel Cohen Gindi & Philipp Jahoda
@@ -13,7 +13,7 @@ import Foundation
 import CoreGraphics
 
 @objc
-public protocol BarChartDataSetProtocol: BarLineScatterCandleBubbleChartDataSetProtocol
+public protocol IBarChartDataSet: IBarLineScatterCandleBubbleChartDataSet
 {
     // MARK: - Data functions and accessors
     

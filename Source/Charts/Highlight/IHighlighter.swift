@@ -1,5 +1,5 @@
 //
-//  Highlighter.swift
+//  IHighlighter.swift
 //  Charts
 //
 //  Copyright 2015 Daniel Cohen Gindi & Philipp Jahoda
@@ -12,8 +12,8 @@
 import Foundation
 import CoreGraphics
 
-@objc(ChartHighlighter)
-public protocol Highlighter: class
+@objc(IChartHighlighter)
+public protocol IHighlighter: class
 {
     /// - Parameters:
     ///   - x:

@@ -13,7 +13,7 @@ import Foundation
 import CoreGraphics
 
 
-open class RadarChartDataSet: LineRadarChartDataSet, RadarChartDataSetProtocol
+open class RadarChartDataSet: LineRadarChartDataSet, IRadarChartDataSet
 {
     private func initialize()
     {

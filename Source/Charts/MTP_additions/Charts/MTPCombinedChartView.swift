@@ -22,6 +22,28 @@ open class MTPCombinedChartView: CombinedChartView, MTPCombinedChartDataProvider
         case area
     }
     
+    public override init(frame: CGRect)
+    {
+        mtpXAxis = MTPXAxis()
+        mtpLeftAxis = MTPYAxis(position: .left)
+        mtpRightAxis = MTPYAxis(position: .right)
+        super.init(frame: frame)
+        _xAxis = mtpXAxis
+        leftAxis = mtpLeftAxis
+        rightAxis = mtpRightAxis
+    }
+    
+    public required init?(coder aDecoder: NSCoder)
+    {
+        mtpXAxis = MTPXAxis()
+        mtpLeftAxis = MTPYAxis(position: .left)
+        mtpRightAxis = MTPYAxis(position: .right)
+        super.init(coder: aDecoder)
+        _xAxis = mtpXAxis
+        leftAxis = mtpLeftAxis
+        rightAxis = mtpRightAxis
+    }
+    
     // Overriding ChartViewBase's xAxis getter/setter to return mtpXAxis and avoid original value to be set
     override open var xAxis: XAxis {
         get {
@@ -83,13 +105,27 @@ open class MTPCombinedChartView: CombinedChartView, MTPCombinedChartDataProvider
     }
     
     // To replace ChartViewBase's xAxis
-    @objc open internal(set) var mtpXAxis = MTPXAxis()
+    @objc open internal(set) var mtpXAxis: MTPXAxis {
+        didSet {
+            _xAxis = mtpXAxis
+        }
+    }
     
     // To replace BarLineChartViewBase's leftAxis
-    @objc open internal(set) var mtpLeftAxis = MTPYAxis(position: .left)
+    // MTPYAxis(position: .left) {
+    @objc open internal(set) var mtpLeftAxis: MTPYAxis {
+        didSet {
+            leftAxis = mtpLeftAxis
+        }
+    }
     
     // To replace BarLineChartViewBase's rightAxis
-    @objc open internal(set) var mtpRightAxis = MTPYAxis(position: .right)
+    // MTPYAxis(position: .right)
+    @objc open internal(set) var mtpRightAxis: MTPYAxis {
+        didSet {
+            rightAxis = mtpRightAxis
+        }
+    }
     
     // To replace ChartViewBase's xAxisRenderer
     @objc open lazy var mtpXAxisRenderer = MTPXAxisRenderer(viewPortHandler: viewPortHandler, xAxis: xAxis, transformer: _leftAxisTransformer)

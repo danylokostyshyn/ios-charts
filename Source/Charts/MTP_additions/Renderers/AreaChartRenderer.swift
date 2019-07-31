@@ -81,4 +81,10 @@ open class AreaChartRenderer: LineScatterCandleRadarRenderer
         context.fillPath()
         context.restoreGState()
     }
+    
+    @objc open override func drawValues(context: CGContext) { }
+    
+    @objc open override func drawExtras(context: CGContext) { }
+    
+    @objc open override func drawHighlighted(context: CGContext, indices: [Highlight]) { }
 }

@@ -9,6 +9,12 @@ import Foundation
 
 open class MTPYAxisRenderer: YAxisRenderer
 {
+    private let livePriceRenderer: MTPYAxisLivePriceRendererProtocol
+    @objc public init(viewPortHandler: ViewPortHandler, yAxis: YAxis?, transformer: Transformer?, livePriceRenderer: MTPYAxisLivePriceRendererProtocol)
+    {
+        self.livePriceRenderer = livePriceRenderer
+        super.init(viewPortHandler: viewPortHandler, yAxis: yAxis, transformer: transformer)
+    }
     
     // Overrides YAxisRenderer's drawYLabels
     internal override func drawYLabels(
@@ -42,76 +48,13 @@ open class MTPYAxisRenderer: YAxisRenderer
         }
         
         // additions
-        guard let axis = axis as? MTPYAxis,
-            axis.drawCurrentValueLabel else {
+        guard let axis = axis as? MTPYAxis, let transformer = self.transformer else {
                 print("expected MTPYAxis !")
                 return
         }
-        drawCurrentValueLabel(context: context, fixedPosition: fixedPosition, offset: offset, textAlign: textAlign, mtpYAXis: axis)
-        // end additions
+        
+        for data in axis.livePriceDataSet.reversed() {
+            livePriceRenderer.drawLivePrice(data: data, context: context, viewPortHandler: viewPortHandler, transformer: transformer, fixedPosition: fixedPosition, offset: offset, textAlign: textAlign, axis: axis)
+        }
     }
-    
-    // additions
-    internal func drawCurrentValueLabel(context: CGContext, fixedPosition: CGFloat, offset: CGFloat, textAlign: NSTextAlignment, mtpYAXis: MTPYAxis)
-    {
-        guard let transformer = self.transformer else { return }
-
-        let currentValue = mtpYAXis.currentValue
-        let labelFont = mtpYAXis.labelFont
-        let labelTextColor = mtpYAXis.currentValueTextColor
-        let labelBackgroundColor = mtpYAXis.currentValueBackgroundColor
-
-        var pt = CGPoint()
-
-        pt = transformer.pixelForValues(x: 0, y: currentValue)
-
-        pt.x = fixedPosition
-        pt.y += offset
-
-        let formatterString = mtpYAXis.format(number: currentValue)
-
-        var rect = (formatterString as NSString).boundingRect(with: CGSize.zero, options: .usesFontLeading, attributes:  [.font: labelFont], context: nil)
-        rect.origin = pt
-        if mtpYAXis.axisDependency == .left {
-            rect.origin.x -= rect.width
-        }
-        rect.insetBy(dx:  -5.0, dy:  -2.0)
-        if mtpYAXis.drawArrowPointerEnabled {
-             rect.insetBy(dx:  3.0, dy: 0.0)
-        }
-
-        context.addRect(rect)
-        context.setFillColor(labelBackgroundColor.cgColor)
-        context.fillPath()
-
-        if mtpYAXis.drawArrowPointerEnabled {
-            switch mtpYAXis.axisDependency {
-            case .left:
-                context.move(to:CGPoint(x: rect.maxX, y: rect.maxY))
-                context.addLine(to:CGPoint(x: rect.maxX + 5.0, y: rect.midY))
-                context.addLine(to:CGPoint(x: rect.maxX, y: rect.minY))
-                context.addLine(to:CGPoint(x: rect.maxX, y: rect.maxY))
-            case .right:
-                context.move   (to:CGPoint(x: rect.minX, y: rect.maxY))
-                context.addLine(to:CGPoint(x: rect.minX - 5.0, y: rect.midY))
-                context.addLine(to:CGPoint(x: rect.minX, y: rect.minY))
-                context.addLine(to:CGPoint(x: rect.minX, y: rect.maxY))
-            }
-            context.closePath()
-            context.fillPath()
-        }
-
-//        context.drawText(formatterString,
-//                         at: pt,
-//                         align: textAlign,
-//                         attributes: [.font: labelFont, .foregroundColor: labelTextColor])
-        ChartUtils.drawText(
-            context: context,
-            text: formatterString,
-            point: pt,
-            align: textAlign,
-            attributes: [.font: labelFont, .foregroundColor: labelTextColor]
-        )
-    }
-    // end additions
 }

@@ -9,14 +9,9 @@ import Foundation
 
 open class MTPYAxis: YAxis
 {
-    // additions to display the current price text/arrow/line
-    @objc public var drawCurrentValueLabel = false
-    @objc public var currentValueTextColor = UIColor.white
-    @objc public var currentValueBackgroundColor = UIColor.black
-    @objc public var drawArrowPointerEnabled = false
-    
     @objc public var currentValue: Double = 0.0
-    // end additions
+    @objc public var livePriceDataSet: [MTPYAxisLivePriceData] = []
+    
     
     // additions
     public func format(number: Double) -> String

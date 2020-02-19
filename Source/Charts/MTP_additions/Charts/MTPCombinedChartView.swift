@@ -127,14 +127,16 @@ open class MTPCombinedChartView: CombinedChartView, MTPCombinedChartDataProvider
         }
     }
     
+    @objc public var livePriceRenderer: MTPYAxisLivePriceRendererProtocol = MTPYAxisLivePriceRenderer()
+    
     // To replace ChartViewBase's xAxisRenderer
     @objc open lazy var mtpXAxisRenderer = MTPXAxisRenderer(viewPortHandler: viewPortHandler, xAxis: xAxis, transformer: _leftAxisTransformer)
     
     // To replace BarLineChartViewBase's leftYAxisRenderer
-    @objc open lazy var mtpLeftYAxisRenderer = MTPYAxisRenderer(viewPortHandler: viewPortHandler, yAxis: leftAxis, transformer: _leftAxisTransformer)
+    @objc open lazy var mtpLeftYAxisRenderer = MTPYAxisRenderer(viewPortHandler: viewPortHandler, yAxis: leftAxis, transformer: _leftAxisTransformer, livePriceRenderer: livePriceRenderer)
     
     // To replace BarLineChartViewBase's rightYAxisRenderer
-    @objc open lazy var mtpRightYAxisRenderer = MTPYAxisRenderer(viewPortHandler: viewPortHandler, yAxis: rightAxis, transformer: _rightAxisTransformer)
+    @objc open lazy var mtpRightYAxisRenderer = MTPYAxisRenderer(viewPortHandler: viewPortHandler, yAxis: rightAxis, transformer: _rightAxisTransformer, livePriceRenderer: livePriceRenderer)
     
     
     @objc public var annotationView: UIView?

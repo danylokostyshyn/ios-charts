@@ -116,6 +116,10 @@ open class AxisRendererBase: Renderer
         }
         
         // Normalize interval
+        // #date 2020-04-02 @Romano: there is a potential crash here.
+        guard !(interval.isNaN || interval.isInfinite) else {
+            return  // or do some error handling
+        }
         let intervalMagnitude = pow(10.0, Double(Int(log10(interval)))).roundedToNextSignficant()
         let intervalSigDigit = Int(interval / intervalMagnitude)
         if intervalSigDigit > 5

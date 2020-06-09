@@ -56,10 +56,14 @@ public class XAxisFormatter: NSObject, IAxisValueFormatter
         let index = Int(value)
         
         if index < 0 || self.values.count <= index  { return "" }
-        guard let dateFormatter = dateFormatter else { return ""}
+        guard let dateFormatter = dateFormatter else { return "" }
 
         let timestamp = self.values[index]
-        let date = Date.init(timeIntervalSince1970: timestamp.doubleValue)
+        let timestampVal = timestamp.doubleValue
+        
+        if timestampVal.isNaN || timestampVal.isInfinite { return "" }
+        
+        let date = Date.init(timeIntervalSince1970: timestampVal)
         let dateString = dateFormatter.string(from: date)
         
         return dateString

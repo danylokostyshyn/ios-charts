@@ -10,5 +10,7 @@ import Foundation
 
 open class MTPCandleChartDataSet: CandleChartDataSet
 {
-    
+    open override var description: String {
+        return super.description + ": \(entries)"
+    }
 }

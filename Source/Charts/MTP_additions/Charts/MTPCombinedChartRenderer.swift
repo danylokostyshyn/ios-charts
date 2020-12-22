@@ -54,14 +54,14 @@ open class MTPCombinedChartRenderer: CombinedChartRenderer
             case .bar:
                 if chart.barData !== nil
                 {
-                    _renderers.append(BarChartRenderer(dataProvider: chart, animator: animator, viewPortHandler: viewPortHandler))
+                    _renderers.append(MTPBarChartRenderer(dataProvider: chart, animator: animator, viewPortHandler: viewPortHandler))
                 }
                 break
                 
             case .line:
                 if chart.lineData !== nil
                 {
-                    _renderers.append(LineChartRenderer(dataProvider: chart, animator: animator, viewPortHandler: viewPortHandler))
+                    _renderers.append(MTPLineChartRenderer(dataProvider: chart, animator: animator, viewPortHandler: viewPortHandler))
                 }
                 break
                 
@@ -75,14 +75,14 @@ open class MTPCombinedChartRenderer: CombinedChartRenderer
             case .scatter:
                 if chart.scatterData !== nil
                 {
-                    _renderers.append(ScatterChartRenderer(dataProvider: chart, animator: animator, viewPortHandler: viewPortHandler))
+                    _renderers.append(MTPScatterChartRenderer(dataProvider: chart, animator: animator, viewPortHandler: viewPortHandler))
                 }
                 break
                 
             case .bubble:
                 if chart.bubbleData !== nil
                 {
-                    _renderers.append(BubbleChartRenderer(dataProvider: chart, animator: animator, viewPortHandler: viewPortHandler))
+                    _renderers.append(MTPBubbleChartRenderer(dataProvider: chart, animator: animator, viewPortHandler: viewPortHandler))
                 }
                 break
                 

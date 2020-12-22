@@ -16,6 +16,8 @@ open class AreaChartRenderer: LineScatterCandleRadarRenderer
         super.init(animator: animator, viewPortHandler: viewPortHandler)
         
         self.dataProvider = dataProvider
+        
+        _xBounds = MTP_XBounds()
     }
     
     open override func drawData(context: CGContext)

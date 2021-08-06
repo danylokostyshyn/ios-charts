@@ -90,7 +90,7 @@ open class BarLineScatterCandleBubbleRenderer: DataRenderer
 
 extension BarLineScatterCandleBubbleRenderer.XBounds: RangeExpression {
     public func relative<C>(to collection: C) -> Swift.Range<Int>
-        where C : Collection, Bound == C.Index
+        where C : Collection, Int == C.Index
     {
         return Swift.Range<Int>(min...min + range)
     }

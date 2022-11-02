@@ -582,7 +582,7 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
     #if !os(tvOS)
     @objc private func pinchGestureRecognized(_ recognizer: NSUIPinchGestureRecognizer)
     {
-        if recognizer.state == NSUIGestureRecognizerState.began
+        if recognizer.state == NSUIGestureRecognizerState.began && recognizer.nsuiNumberOfTouches() > 1
         {
             stopDeceleration()
             

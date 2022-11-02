@@ -72,6 +72,11 @@ extension NSUIRotationGestureRecognizer
 #if !os(tvOS)
 extension NSUIPinchGestureRecognizer
 {
+    @objc final func nsuiNumberOfTouches() -> Int
+    {
+        return numberOfTouches
+    }
+    
     @objc final var nsuiScale: CGFloat
         {
         get
@@ -356,6 +361,11 @@ extension NSUIRotationGestureRecognizer
 
 extension NSUIPinchGestureRecognizer
 {
+    final func nsuiNumberOfTouches() -> Int
+    {
+        return 1
+    }
+    
     final var nsuiScale: CGFloat
         {
         get
